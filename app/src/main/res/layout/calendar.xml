@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".calendar"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+
+        <TextView
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="30dp"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:fontFamily="@font/jua_ttf"
+            android:text="여행지는 "
+            android:textSize="30dp"
+            android:textColor="#000000"/>
+
+        <TextView
+            android:layout_marginTop="30dp"
+            android:id="@+id/travel_spot"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:fontFamily="@font/jua_ttf"
+            android:text="tarvel_spot"
+            android:textSize="30dp"
+            android:textColor="#000000"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:textColor="@color/black"
+        android:text= "여행 기간은 언제인가요?"
+        android:gravity="center"
+        android:fontFamily="@font/jua_ttf"
+        android:textSize="25dp"/>
+
+    <com.prolificinteractive.materialcalendarview.MaterialCalendarView
+        android:id="@+id/calendarview"
+        android:background="@drawable/test"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:theme="@style/CalenderViewCustom"
+        app:mcv_dateTextAppearance="@style/CalenderViewDateCustomText"
+        app:mcv_selectionMode="range"
+        app:mcv_weekDayTextAppearance="@style/CalenderViewWeekCustomText"
+        app:mcv_firstDayOfWeek="monday"
+        android:layout_gravity="center"/>
+
+    <TextView
+        android:id="@+id/travelDate"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_gravity="center"
+        android:fontFamily="@font/jua_ttf"
+        android:gravity="top|center"
+        android:text=""
+        android:textColor="@color/black"
+        android:textSize="25dp" />
+
+    <Button
+        android:id="@+id/closeButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="선택 완료"
+        android:textSize="25dp"
+        android:background="@drawable/btn_repple_ex"
+        android:textColor="#ffffff"
+        android:fontFamily="@font/jua_ttf"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        />
+
+
+
+</LinearLayout>

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#ffffff"
+    tools:context=".MainActivity">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:fontFamily="@font/jua_ttf"
+            android:text="TRIP GUIDE"
+            android:textColor="#0000B0"
+            android:textSize="25dp" />
+
+            >
+
+        <TextView
+            android:id="@+id/loginBtn"
+            android:layout_marginRight="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="right|center"
+            android:layout_weight="1"
+            android:textColor="#000000"
+            android:textSize="15dp"
+            android:text="로그인" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/test"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="20dp"
+            android:fontFamily="@font/jua_ttf"
+            android:text="어디로 여행을 떠나시나요?"
+            android:textColor="#000000"
+            android:textSize="25dp" />
+
+        <AutoCompleteTextView
+            android:id="@+id/destiation"
+            android:layout_width="300dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+            android:completionThreshold="1"
+            android:drawableRight="@drawable/searchbutton"
+            android:fontFamily="@font/jua_ttf"
+            android:hint="가고 싶은 여행지를 입력해보세요!"
+            android:textSize="12dp"
+            android:layout_gravity="center"/>
+
+
+
+        <Button
+            android:id="@+id/directBtn"
+            android:textSize="17dp"
+            android:background="@drawable/btn_repple_ex"
+            android:textColor="#ffffff"
+            android:fontFamily="@font/jua_ttf"
+            android:layout_gravity="center"
+            android:text="수동 일정 생성"
+            android:layout_width="300dp"
+            android:layout_height="70dp"
+            android:layout_marginTop="20dp"/>
+
+        <Button
+            android:id="@+id/autoBtn"
+            android:layout_width="300dp"
+            android:layout_height="70dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="50dp"
+            android:background="@drawable/btn_repple_ex"
+            android:fontFamily="@font/jua_ttf"
+            android:text="자동 일정 생성"
+            android:textColor="#ffffff"
+            android:textSize="17dp"
+            android:layout_marginTop="20dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:layout_marginTop="30dp"
+        >
+
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+
+
+    </LinearLayout>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </ScrollView>
+
+
+
+
+</LinearLayout>
