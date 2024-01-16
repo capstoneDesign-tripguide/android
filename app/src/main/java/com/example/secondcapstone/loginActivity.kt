@@ -2,6 +2,7 @@ package com.example.secondcapstone
 
 import android.content.ContentValues.TAG
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -32,7 +33,7 @@ class loginActivity : AppCompatActivity(){
         val editText_id = findViewById<EditText>(R.id.editText_id) //아이디
         val text_pw = findViewById<TextView>(R.id.text_pw)
         val editText_pw = findViewById<EditText>(R.id.editText_pw) //패스워드
-
+        val sign_up_btn = findViewById<TextView>(R.id.sign_up)
         val retrofit = Retrofit.Builder() //retrofit 객체 생성
             .baseUrl("https://jsonplaceholder.typicode.com") //서버 주소
             .addConverterFactory(GsonConverterFactory.create())
@@ -56,7 +57,6 @@ class loginActivity : AppCompatActivity(){
 
             override fun onFailure(call: Call<retroTestResponse>, t: Throwable) {
                 // 통신 실패 시 처리
-                // TODO: 실패 시 처리 내용 추가
                 Log.d("communication", "API communication is failed.")
             }
         })
@@ -84,7 +84,12 @@ class loginActivity : AppCompatActivity(){
                 editText_pw.backgroundTintList = ContextCompat.getColorStateList(this, R.color.black)
             }
         }
+        sign_up_btn.setOnClickListener {
+            var intent = Intent(this, signUp::class.java)
+            startActivity(intent)
+        }
     }
 }
+//github commit test
 
 

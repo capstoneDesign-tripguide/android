@@ -46,7 +46,7 @@
 
     <com.prolificinteractive.materialcalendarview.MaterialCalendarView
         android:id="@+id/calendarview"
-        android:background="@drawable/test"
+        android:background="@drawable/skyblue_background"
         android:layout_width="match_parent"
         android:layout_height="400dp"
         android:theme="@style/CalenderViewCustom"
