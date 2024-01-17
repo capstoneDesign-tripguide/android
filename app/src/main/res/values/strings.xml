@@ -47,4 +47,7 @@
         <item>11월</item>
         <item>12월</item>
     </string-array>
+    <string name="naver_client_id">EBYerfU_Wpnvm801D2jn</string>
+    <string name="naver_client_secret">0IFzyygW3o</string>
+    <string name="naver_client_name">capstone_99s</string>
 </resources>

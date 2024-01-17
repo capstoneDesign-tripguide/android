@@ -134,15 +134,15 @@
             android:layout_gravity="center"/>
 
         <TextView
-            android:layout_width="20dp"
+            android:layout_width="wrap_content"
             android:layout_height="20dp"
             android:layout_weight="3"
             android:fontFamily="@font/jua_ttf"
             android:text="다른 로그인 방식"
             android:textColor="#000000"
             android:textSize="20dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"/>
+            android:gravity="center"
+            android:layout_gravity="center"/>
 
         <View
             android:layout_width="15dp"
@@ -236,4 +236,9 @@
                 android:fontFamily="@font/jua_ttf"/>
         </LinearLayout>
     </LinearLayout>
+    <com.navercorp.nid.oauth.view.NidOAuthLoginButton
+        android:id="@+id/buttonOAuthLoginImg"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp" />
+
 </LinearLayout>

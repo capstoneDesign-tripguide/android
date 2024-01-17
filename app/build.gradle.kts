@@ -37,7 +37,9 @@ android {
     //뷰 바인딩 허용
     buildFeatures{
         viewBinding = true
+        dataBinding = true
     }
+
 }
 
 dependencies {
@@ -55,4 +57,20 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:2.9.0") //retrofit을 위한 의존성1
     implementation("com.squareup.retrofit2:converter-gson:2.9.0") //retrofit을 위한 의존성2
 
+    //네아로 모듈을 위한 의존성들 사용(Project/main/libs)
+    implementation(files("libs/oauth-5.9.0.aar"))
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.6.10")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")
+    implementation("androidx.appcompat:appcompat:1.3.1")
+    implementation("androidx.legacy:legacy-support-core-utils:1.0.0")
+    implementation("androidx.browser:browser:1.0.0")
+    implementation("androidx.legacy:legacy-support-v4:1.0.0")
+    implementation("androidx.constraintlayout:constraintlayout:1.1.3")
+    implementation("androidx.security:security-crypto:1.1.0-alpha03")
+    implementation("androidx.core:core-ktx:1.3.0")
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.moshi:moshi-kotlin:1.11.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.2.1")
+    implementation("com.airbnb.android:lottie:3.1.0")
 }
