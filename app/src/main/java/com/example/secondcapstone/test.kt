@@ -261,5 +261,5 @@ class test : AppCompatActivity() {
         binding.oauthClientsecret.setText(clientSecret)
         binding.oauthClientname.setText(clientName)
     }
-
+//test
 }
