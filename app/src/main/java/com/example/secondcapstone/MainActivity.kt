@@ -3,6 +3,7 @@ package com.example.secondcapstone
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.widget.ArrayAdapter
@@ -11,21 +12,29 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import com.example.secondcapstone.databinding.ActivityMainBinding
+import com.example.secondcapstone.databinding.LoginActivityBinding
+import com.navercorp.nid.NaverIdLoginSDK
 
 
 class MainActivity : AppCompatActivity() {
     //뷰 바인딩
     private lateinit var calendarBinding: ActivityMainBinding
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
 
         //여행지 목록 자동 완성
         val destination = resources.getStringArray(R.array.place)
         val autoCompleteTextView = findViewById<AutoCompleteTextView>(R.id.destiation)
         val arrayAdapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, destination)
+        val testBtn = findViewById<Button>(R.id.testBtn)
         autoCompleteTextView.setAdapter(arrayAdapter)
+
+        testBtn.setOnClickListener {
+            var intent = Intent(this, test::class.java)
+            startActivity(intent)
+        }
 
         //돋보기 버튼으로 여행지 입력
         autoCompleteTextView.setOnTouchListener { _, event ->

@@ -15,7 +15,10 @@
         android:theme="@style/Theme.SecondCapstone"
         tools:targetApi="31">
         <activity
-            android:name=".naver_test"
+            android:name=".test"
+            android:exported="false" />
+        <activity
+            android:name=".test0118"
             android:exported="false" />
         <activity
             android:name=".signUp"
