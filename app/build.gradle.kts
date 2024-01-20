@@ -58,7 +58,7 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.9.0") //retrofit을 위한 의존성2
 
     //네아로 모듈을 위한 의존성들 사용(Project/main/libs)
-    implementation(files("libs/oauth-5.9.0.aar"))
+    //implementation(files("libs/oauth-5.9.0.aar"))
     implementation("org.jetbrains.kotlin:kotlin-stdlib:1.6.10")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")
     implementation("androidx.appcompat:appcompat:1.3.1")
@@ -73,5 +73,8 @@ dependencies {
     implementation("com.squareup.moshi:moshi-kotlin:1.11.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.2.1")
     implementation("com.airbnb.android:lottie:3.1.0")
+
+    implementation ("com.navercorp.nid:oauth:5.9.0") // jdk 11
+    //implementation("com.navercorp.nid:oauth-jdk8:5.9.0") // jdk 8
 
 }

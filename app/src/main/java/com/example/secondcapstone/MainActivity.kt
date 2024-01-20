@@ -31,10 +31,7 @@ class MainActivity : AppCompatActivity() {
         val testBtn = findViewById<Button>(R.id.testBtn)
         autoCompleteTextView.setAdapter(arrayAdapter)
 
-        testBtn.setOnClickListener {
-            var intent = Intent(this, test::class.java)
-            startActivity(intent)
-        }
+
 
         //돋보기 버튼으로 여행지 입력
         autoCompleteTextView.setOnTouchListener { _, event ->

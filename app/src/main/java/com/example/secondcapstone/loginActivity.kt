@@ -33,54 +33,36 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-
-
-
-class loginActivity : AppCompatActivity(){
+class loginActivity : AppCompatActivity() {
     private lateinit var binding: LoginActivityBinding
-    override fun onCreate(savedInstanceState: Bundle?){
-        super.onCreate(savedInstanceState)
-        //setContentView(R.layout.login_activity) //login_activity layout으로 전환
+    private lateinit var context: Context
 
-        Log.d("test", "0")
+    //id, secret은 테스트 끝나면 values.getsting()으로 바꾸자
+    private var clientId = "EBYerfU_Wpnvm801D2jn"
+    private var clientSecret = "0IFzyygW3o"
+    private var clientName = "로그인 테스트"
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        Log.d("test0120", "onCreate")
         binding = LoginActivityBinding.inflate(layoutInflater)
-        Log.d("test", "0.1")
+        Log.d("test0120", "binding")
         setContentView(binding.root)
-        Log.d("test", "1")
+        Log.d("test0120", "setContent")
+
+        Log.d("test0120", "initStart")
+        init()
+        Log.d("test0120", "initEnd")
         val text_id = findViewById<TextView>(R.id.text_id)
         val editText_id = findViewById<EditText>(R.id.editText_id) //아이디
         val text_pw = findViewById<TextView>(R.id.text_pw)
         val editText_pw = findViewById<EditText>(R.id.editText_pw) //패스워드
         val sign_up_btn = findViewById<TextView>(R.id.sign_up)
-        val naver_start = findViewById<Button>(R.id.naverLoginBtn)
 
-        Log.d("test", "2")
         //네이버 로그인 정보 초기화
-        NaverIdLoginSDK.initialize(this, getString(R.string.naver_client_id), getString(R.string.naver_client_secret), getString(R.string.naver_client_name))
+        //NaverIdLoginSDK.initialize(this, getString(R.string.naver_client_id), getString(R.string.naver_client_secret), getString(R.string.naver_client_name))
 
-        Log.d("test", "3")
-        binding.buttonOAuthLoginImg.setOAuthLogin(object : OAuthLoginCallback {
-            override fun onSuccess() {
-                Log.d("test","onSuccess")
-                updateView()
-            }
-
-            override fun onFailure(httpStatus: Int, message: String) {
-                Log.d("test","onFailure")
-                val errorCode = NaverIdLoginSDK.getLastErrorCode().code
-                val errorDescription = NaverIdLoginSDK.getLastErrorDescription()
-                Toast.makeText(
-                    this@loginActivity,
-                    "errorCode:$errorCode, errorDesc:$errorDescription",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-
-            override fun onError(errorCode: Int, message: String) {
-                onFailure(errorCode, message)
-            }
-
-        })
 
         val retrofit = Retrofit.Builder() //retrofit 객체 생성
             .baseUrl("https://jsonplaceholder.typicode.com") //서버 주소
@@ -95,7 +77,10 @@ class loginActivity : AppCompatActivity(){
         val call = apiService.sendDataToServer(requestData)
 
         call.enqueue(object : retrofit2.Callback<retroTestResponse> {
-            override fun onResponse(call: Call<retroTestResponse>, response: retrofit2.Response<retroTestResponse>) {
+            override fun onResponse(
+                call: Call<retroTestResponse>,
+                response: retrofit2.Response<retroTestResponse>
+            ) {
                 // 성공적으로 응답을 받았을 때 처리
                 val responseData = response.body()
                 Log.d("communication", "API communication is successed.")
@@ -112,23 +97,25 @@ class loginActivity : AppCompatActivity(){
         editText_id.setOnFocusChangeListener { view, hasFocus ->
             if (hasFocus) {
                 text_id.setTextColor(Color.parseColor("#99ccff"))
-                editText_id.backgroundTintList = ContextCompat.getColorStateList(this, R.color.lgn_tint)
-            }
-            else{
+                editText_id.backgroundTintList =
+                    ContextCompat.getColorStateList(this, R.color.lgn_tint)
+            } else {
                 text_id.setTextColor(Color.parseColor("#000000"))
-                editText_id.backgroundTintList = ContextCompat.getColorStateList(this, R.color.black)
+                editText_id.backgroundTintList =
+                    ContextCompat.getColorStateList(this, R.color.black)
             }
 
-            }
+        }
 
         editText_pw.setOnFocusChangeListener { view, hasFocus ->
             if (hasFocus) {
                 text_pw.setTextColor(Color.parseColor("#99ccff"))
-                editText_pw.backgroundTintList = ContextCompat.getColorStateList(this, R.color.lgn_tint)
-            }
-            else{
+                editText_pw.backgroundTintList =
+                    ContextCompat.getColorStateList(this, R.color.lgn_tint)
+            } else {
                 text_pw.setTextColor(Color.parseColor("#000000"))
-                editText_pw.backgroundTintList = ContextCompat.getColorStateList(this, R.color.black)
+                editText_pw.backgroundTintList =
+                    ContextCompat.getColorStateList(this, R.color.black)
             }
         }
         sign_up_btn.setOnClickListener {
@@ -136,15 +123,37 @@ class loginActivity : AppCompatActivity(){
             startActivity(intent)
         }
     }
-    private fun updateView() {
-        Log.d("test","updateView")
-                Log.d("test", "AccessToken : " + NaverIdLoginSDK.getAccessToken())
-                Log.d("test", "client id : " + getString(R.string.naver_client_id))
-                Log.d("test", "ReFreshToken : " + NaverIdLoginSDK.getRefreshToken())
-                Log.d("test", "Expires : " + NaverIdLoginSDK.getExpiresAt().toString())
-                Log.d("test", "TokenType : " + NaverIdLoginSDK.getTokenType())
-                Log.d("test", "State : " + NaverIdLoginSDK.getState().toString())
+
+    private fun init() {
+        context = this
+        // Initialize NAVER id login SDK
+        NaverIdLoginSDK.apply {
+            showDevelopersLog(true)
+            initialize(context, clientId, clientSecret, clientName)
+            isShowMarketLink = true
+            isShowBottomTab = true
+        }
+
+        binding.buttonOAuthLoginImg.setOAuthLogin(object : OAuthLoginCallback {
+            override fun onSuccess() {
+                Log.d("test0120", "success")
+                //updateView()
+            }
+
+            override fun onFailure(httpStatus: Int, message: String) {
+                val errorCode = NaverIdLoginSDK.getLastErrorCode().code
+                val errorDescription = NaverIdLoginSDK.getLastErrorDescription()
+                Log.d("test0120", "fail")
+            }
+
+            override fun onError(errorCode: Int, message: String) {
+                Log.d("test0120", "error")
+                onFailure(errorCode, message)
+            }
+
+        })
+
     }
+
+
 }
-
-
