@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name=".GlobalApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -14,12 +15,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SecondCapstone"
         tools:targetApi="31">
-        <activity
-            android:name=".test"
-            android:exported="false" />
-        <activity
-            android:name=".test0118"
-            android:exported="false" />
         <activity
             android:name=".signUp"
             android:exported="false" />
@@ -46,7 +41,23 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
+
+        <activity
+            android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <!-- Redirect URI: "kakao${NATIVE_APP_KEY}://oauth" -->
+                <data android:host="oauth"
+                    android:scheme="kakaof6f9d03046eb1871025498f5b6d37780" />
+            </intent-filter>
+        </activity>
+
     </application>
 
 </manifest>

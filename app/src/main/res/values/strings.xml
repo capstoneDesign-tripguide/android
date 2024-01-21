@@ -50,4 +50,5 @@
     <string name="naver_client_id">EBYerfU_Wpnvm801D2jn</string>
     <string name="naver_client_secret">0IFzyygW3o</string>
     <string name="naver_client_name">capstone_99s</string>
+    <string name="kakao_native_key">f6f9d03046eb1871025498f5b6d37780</string>
 </resources>

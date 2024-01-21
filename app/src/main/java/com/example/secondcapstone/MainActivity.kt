@@ -13,6 +13,8 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import com.example.secondcapstone.databinding.ActivityMainBinding
 import com.example.secondcapstone.databinding.LoginActivityBinding
+import com.kakao.sdk.common.KakaoSdk
+import com.kakao.sdk.common.util.Utility
 import com.navercorp.nid.NaverIdLoginSDK
 
 
@@ -22,7 +24,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        Log.d("test0121", "keyhash : ${Utility.getKeyHash(this)}") //해시키 구하기
 
         //여행지 목록 자동 완성
         val destination = resources.getStringArray(R.array.place)
@@ -54,6 +56,7 @@ class MainActivity : AppCompatActivity() {
         //로그인 버튼 클릭 시 액티비티 전환
         val loginBtn = findViewById<TextView>(R.id.loginBtn)
         loginBtn.setOnClickListener {
+            Log.d("test0121", "setOnClickLoginBtn")
             var intent = Intent(this, loginActivity::class.java)
             intent.putExtra("data", "1") //data라는 변수에 value를 put. 넣었으니 loginActivity.kt에서 받아야 함(get)
             startActivity(intent)

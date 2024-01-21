@@ -20,6 +20,7 @@ import com.example.secondcapstone.databinding.ActivityCalendarNextBinding
 import com.example.secondcapstone.databinding.ActivityMainBinding
 import com.example.secondcapstone.databinding.LoginActivityBinding
 import com.google.gson.JsonObject
+import com.kakao.sdk.user.UserApiClient
 import com.navercorp.nid.NaverIdLoginSDK
 import com.navercorp.nid.oauth.OAuthLoginCallback
 import com.navercorp.nid.oauth.NidOAuthBehavior
@@ -37,33 +38,39 @@ class loginActivity : AppCompatActivity() {
     private lateinit var binding: LoginActivityBinding
     private lateinit var context: Context
 
-    //id, secret은 테스트 끝나면 values.getsting()으로 바꾸자
-    private var clientId = "EBYerfU_Wpnvm801D2jn"
-    private var clientSecret = "0IFzyygW3o"
-    private var clientName = "로그인 테스트"
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        Log.d("test0120", "onCreate")
-        binding = LoginActivityBinding.inflate(layoutInflater)
-        Log.d("test0120", "binding")
-        setContentView(binding.root)
-        Log.d("test0120", "setContent")
 
-        Log.d("test0120", "initStart")
-        init()
-        Log.d("test0120", "initEnd")
+        binding = LoginActivityBinding.inflate(layoutInflater)
+
+        setContentView(binding.root)
+
+
+        context = this
+//        var clientId = getString(R.string.naver_client_id)
+//        var clientSecret = getString(R.string.naver_client_secret)
+//        var clientName = getString(R.string.naver_client_name)
+        init() //네이버 로그인초기화
+
         val text_id = findViewById<TextView>(R.id.text_id)
         val editText_id = findViewById<EditText>(R.id.editText_id) //아이디
         val text_pw = findViewById<TextView>(R.id.text_pw)
         val editText_pw = findViewById<EditText>(R.id.editText_pw) //패스워드
         val sign_up_btn = findViewById<TextView>(R.id.sign_up)
-
-        //네이버 로그인 정보 초기화
-        //NaverIdLoginSDK.initialize(this, getString(R.string.naver_client_id), getString(R.string.naver_client_secret), getString(R.string.naver_client_name))
+        val kakao_login_btn = findViewById<Button>(R.id.kakaoLoginBtn)
 
 
+        kakao_login_btn.setOnClickListener {
+            UserApiClient.instance.loginWithKakaoTalk(context) { token, error ->
+                if (error != null) {
+                    Log.e("test0121", "카카오 로그인 실패", error)
+                }
+                else if (token != null) {
+                    Log.i("test0121", "로그인 성공 ${token.accessToken}")
+                }
+            }
+        }
         val retrofit = Retrofit.Builder() //retrofit 객체 생성
             .baseUrl("https://jsonplaceholder.typicode.com") //서버 주소
             .addConverterFactory(GsonConverterFactory.create())
@@ -124,30 +131,37 @@ class loginActivity : AppCompatActivity() {
         }
     }
 
+    //네이버 아이디 로그인 API
     private fun init() {
         context = this
-        // Initialize NAVER id login SDK
         NaverIdLoginSDK.apply {
             showDevelopersLog(true)
-            initialize(context, clientId, clientSecret, clientName)
+            initialize(context, getString(R.string.naver_client_id), getString(R.string.naver_client_secret), getString(R.string.naver_client_name))
+
             isShowMarketLink = true
             isShowBottomTab = true
         }
 
         binding.buttonOAuthLoginImg.setOAuthLogin(object : OAuthLoginCallback {
             override fun onSuccess() {
-                Log.d("test0120", "success")
+                Log.d("test0121", "★success★")
+                Log.d("test0121", "AccessToken : " + NaverIdLoginSDK.getAccessToken())
+                Log.d("test0121", "client id : " + getString(R.string.naver_client_id))
+                Log.d("test0121", "ReFreshToken : " + NaverIdLoginSDK.getRefreshToken())
+                Log.d("test0121", "Expires : " + NaverIdLoginSDK.getExpiresAt().toString())
+                Log.d("test0121", "TokenType : " + NaverIdLoginSDK.getTokenType())
+                Log.d("test0121", "State : " + NaverIdLoginSDK.getState().toString())
                 //updateView()
             }
 
             override fun onFailure(httpStatus: Int, message: String) {
                 val errorCode = NaverIdLoginSDK.getLastErrorCode().code
                 val errorDescription = NaverIdLoginSDK.getLastErrorDescription()
-                Log.d("test0120", "fail")
+                Log.d("test0121", "fail. ErrorCode: ${errorCode}, ErrorDescription: ${errorDescription}")
             }
 
             override fun onError(errorCode: Int, message: String) {
-                Log.d("test0120", "error")
+                Log.d("test0121", "error")
                 onFailure(errorCode, message)
             }
 
