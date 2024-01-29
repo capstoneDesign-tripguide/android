@@ -33,41 +33,8 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/birthday"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="생년월일"
-                android:textColor="#000000"
-                android:fontFamily="@font/jua_ttf"
-                android:textSize="20dp"
-                android:layout_marginTop="30dp"/>
 
-            <EditText
-                android:id="@+id/editText_birthday"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="10dp"
-                android:fontFamily="@font/jua_ttf"
-                android:hint = "생년월일을 입력해주세요."
-                android:textSize="15dp"
-                android:gravity="center_vertical" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="성함"
-                android:textColor="#000000"
-                android:fontFamily="@font/jua_ttf"
-                android:textSize="20dp"
-                android:layout_marginTop="30dp"/>
-            <EditText
-                android:fontFamily="@font/jua_ttf"
-                android:hint="성함을 입력해주세요."
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:textSize="15dp"
-                android:gravity="center_vertical"
-                android:layout_marginTop="10dp"/>
+
 
             <TextView
                 android:id="@+id/text_id"
@@ -79,16 +46,17 @@
                 android:textSize="20dp"
                 android:layout_marginTop="30dp"/>
 
+
             <EditText
-                android:id="@+id/editText_id"
+                android:id="@+id/USERID"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginTop="10dp"
+                android:backgroundTint="#000000"
                 android:fontFamily="@font/jua_ttf"
-                android:hint = "아이디를 입력해주세요."
-                android:textSize="15dp"
                 android:gravity="center_vertical"
-                android:backgroundTint="#000000" />
+                android:hint="아이디를 입력해주세요."
+                android:textSize="15dp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -99,6 +67,7 @@
                 android:textSize="20dp"
                 android:layout_marginTop="30dp"/>
             <EditText
+                android:id="@+id/USERPASSWORD"
                 android:fontFamily="@font/jua_ttf"
                 android:hint="비밀번호를 입력해주세요."
                 android:layout_width="match_parent"
@@ -116,7 +85,7 @@
                 android:textSize="20dp"
                 android:layout_marginTop="30dp"/>
             <EditText
-                android:id="@+id/editText_pw"
+                android:id="@+id/CHECK_PASSWORD"
                 android:fontFamily="@font/jua_ttf"
                 android:hint="비밀번호를 다시 입력해주세요."
                 android:layout_width="match_parent"
@@ -124,8 +93,65 @@
                 android:textSize="15dp"
                 android:gravity="center_vertical"
                 android:layout_marginTop="10dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="성함"
+                android:textColor="#000000"
+                android:fontFamily="@font/jua_ttf"
+                android:textSize="20dp"
+                android:layout_marginTop="30dp"/>
+            <EditText
+                android:id="@+id/USERNAME"
+                android:fontFamily="@font/jua_ttf"
+                android:hint="성함을 입력해주세요."
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:textSize="15dp"
+                android:gravity="center_vertical"
+                android:layout_marginTop="10dp"/>
+            <TextView
+                android:id="@+id/NAME"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="닉네임"
+                android:textColor="#000000"
+                android:fontFamily="@font/jua_ttf"
+                android:textSize="20dp"
+                android:layout_marginTop="30dp"/>
+
+            <EditText
+                android:id="@+id/USERNICKNAME"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/jua_ttf"
+                android:hint = "사용하실 닉네임을 입력해주세요."
+                android:textSize="15dp"
+                android:gravity="center_vertical" />
+            <TextView
+                android:id="@+id/email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="이메일"
+                android:textColor="#000000"
+                android:fontFamily="@font/jua_ttf"
+                android:textSize="20dp"
+                android:layout_marginTop="30dp"/>
+
+            <EditText
+                android:id="@+id/USEREAMAIL"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/jua_ttf"
+                android:hint = "이메일 주소를 입력해주세요."
+                android:textSize="15dp"
+                android:gravity="center_vertical" />
+
 
             <Button
+                android:id="@+id/SIGNUP"
                 android:layout_width="350dp"
                 android:layout_height="50dp"
                 android:layout_gravity="center"
@@ -135,6 +161,11 @@
                 android:fontFamily="@font/jua_ttf"
                 android:background="@drawable/btn_repple_ex"
                 android:layout_marginTop="20dp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="10dp"
+                android:text="일치하지 않습니다."/>
         </LinearLayout>
 
     </LinearLayout>

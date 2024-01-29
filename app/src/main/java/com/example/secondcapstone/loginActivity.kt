@@ -48,9 +48,7 @@ class loginActivity : AppCompatActivity() {
 
 
         context = this
-//        var clientId = getString(R.string.naver_client_id)
-//        var clientSecret = getString(R.string.naver_client_secret)
-//        var clientName = getString(R.string.naver_client_name)
+
         init() //네이버 로그인초기화
 
         val text_id = findViewById<TextView>(R.id.text_id)
@@ -61,13 +59,13 @@ class loginActivity : AppCompatActivity() {
         val kakao_login_btn = findViewById<Button>(R.id.kakaoLoginBtn)
 
 
-        kakao_login_btn.setOnClickListener {
+        kakao_login_btn.setOnClickListener { //카카오 로그인
             UserApiClient.instance.loginWithKakaoTalk(context) { token, error ->
                 if (error != null) {
-                    Log.e("test0121", "카카오 로그인 실패", error)
+                    Log.e("test", "kakao login failed", error)
                 }
                 else if (token != null) {
-                    Log.i("test0121", "로그인 성공 ${token.accessToken}")
+                    Log.i("test", "kakao login successed ${token.accessToken}")
                 }
             }
         }
@@ -144,24 +142,24 @@ class loginActivity : AppCompatActivity() {
 
         binding.buttonOAuthLoginImg.setOAuthLogin(object : OAuthLoginCallback {
             override fun onSuccess() {
-                Log.d("test0121", "★success★")
-                Log.d("test0121", "AccessToken : " + NaverIdLoginSDK.getAccessToken())
-                Log.d("test0121", "client id : " + getString(R.string.naver_client_id))
-                Log.d("test0121", "ReFreshToken : " + NaverIdLoginSDK.getRefreshToken())
-                Log.d("test0121", "Expires : " + NaverIdLoginSDK.getExpiresAt().toString())
-                Log.d("test0121", "TokenType : " + NaverIdLoginSDK.getTokenType())
-                Log.d("test0121", "State : " + NaverIdLoginSDK.getState().toString())
+                Log.d("test", "naver login success")
+                Log.d("test", "AccessToken : " + NaverIdLoginSDK.getAccessToken())
+                Log.d("test", "client id : " + getString(R.string.naver_client_id))
+                Log.d("test", "ReFreshToken : " + NaverIdLoginSDK.getRefreshToken())
+                Log.d("test", "Expires : " + NaverIdLoginSDK.getExpiresAt().toString())
+                Log.d("test", "TokenType : " + NaverIdLoginSDK.getTokenType())
+                Log.d("test", "State : " + NaverIdLoginSDK.getState().toString())
                 //updateView()
             }
 
             override fun onFailure(httpStatus: Int, message: String) {
                 val errorCode = NaverIdLoginSDK.getLastErrorCode().code
                 val errorDescription = NaverIdLoginSDK.getLastErrorDescription()
-                Log.d("test0121", "fail. ErrorCode: ${errorCode}, ErrorDescription: ${errorDescription}")
+                Log.d("test", "naver login failed. ErrorCode: ${errorCode}, ErrorDescription: ${errorDescription}")
             }
 
             override fun onError(errorCode: Int, message: String) {
-                Log.d("test0121", "error")
+                Log.d("test", "naver login error")
                 onFailure(errorCode, message)
             }
 
