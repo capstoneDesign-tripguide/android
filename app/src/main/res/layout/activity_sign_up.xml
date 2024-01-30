@@ -162,10 +162,14 @@
                 android:background="@drawable/btn_repple_ex"
                 android:layout_marginTop="20dp"/>
             <TextView
+                android:id="@+id/alarm"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginTop="10dp"
-                android:text="일치하지 않습니다."/>
+                android:fontFamily="@font/jua_ttf"
+                android:textSize="15dp"
+                android:textColor="#FD2B75"
+                android:text="알람"/>
         </LinearLayout>
 
     </LinearLayout>

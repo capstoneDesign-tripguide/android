@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
         val destination = resources.getStringArray(R.array.place)
         val autoCompleteTextView = findViewById<AutoCompleteTextView>(R.id.destiation)
         val arrayAdapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, destination)
-        val testBtn = findViewById<Button>(R.id.testBtn)
+
         autoCompleteTextView.setAdapter(arrayAdapter)
 
 
