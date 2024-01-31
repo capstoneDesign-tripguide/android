@@ -7,8 +7,13 @@ import android.view.View
 import android.widget.Button
 import android.widget.DatePicker
 import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.ScrollView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
+import com.google.android.material.navigation.NavigationView
 import java.util.Calendar
 
 class signUp : AppCompatActivity() {
@@ -26,6 +31,18 @@ class signUp : AppCompatActivity() {
         val input_email = findViewById<EditText>(R.id.USEREAMAIL) //이메일
         val SIGNUP = findViewById<Button>(R.id.SIGNUP) //회원가입 버튼
         val alarm = findViewById<TextView>(R.id.alarm) //문구
+
+        val testBtn = findViewById<Button>(R.id.testbtn)
+        val testButton: Button = findViewById(R.id.testbtn)
+        val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
+
+        testButton.setOnClickListener {
+            if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                drawerLayout.closeDrawer(GravityCompat.START)
+            } else {
+                drawerLayout.openDrawer(GravityCompat.START)
+            }
+        }
 
 
 

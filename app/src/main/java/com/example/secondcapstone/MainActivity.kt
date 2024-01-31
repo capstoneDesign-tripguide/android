@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuItem
 import android.view.MotionEvent
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
@@ -33,7 +35,10 @@ class MainActivity : AppCompatActivity() {
 
         autoCompleteTextView.setAdapter(arrayAdapter)
 
-
+        supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+            setHomeAsUpIndicator(R.drawable.google_login)
+        }
 
         //돋보기 버튼으로 여행지 입력
         autoCompleteTextView.setOnTouchListener { _, event ->
@@ -77,6 +82,7 @@ class MainActivity : AppCompatActivity() {
         }
 
 
+
 //        //뷰 바인딩
 //        calendarBinding = ActivityMainBinding.inflate(layoutInflater)
 //        setContentView(calendarBinding.root)
@@ -95,6 +101,30 @@ class MainActivity : AppCompatActivity() {
 //                mAlertDialog.dismiss()
 //            }
 //        }
+    }
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        // 메뉴 리소스 인플레이션
+        menuInflater.inflate(R.menu.actionbar_btn, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // 액션바 버튼 및 메뉴 아이템 클릭 처리
+        return when (item.itemId) {
+            android.R.id.home -> {
+                // 홈 버튼 클릭 시 동작
+                // 여기에 필요한 동작 추가
+                Log.d("test0131", "click home")
+                true
+            }
+            R.id.action_refresh -> {
+                // Refresh 메뉴 아이템 클릭 시 동작
+                // 여기에 필요한 동작 추가
+                Log.d("test0131", "click refresh")
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 }
 
