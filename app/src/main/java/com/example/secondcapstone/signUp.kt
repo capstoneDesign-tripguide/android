@@ -33,14 +33,13 @@ class signUp : AppCompatActivity() {
         val alarm = findViewById<TextView>(R.id.alarm) //문구
 
         val testBtn = findViewById<Button>(R.id.testbtn)
-        val testButton: Button = findViewById(R.id.testbtn)
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
 
-        testButton.setOnClickListener {
-            if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-                drawerLayout.closeDrawer(GravityCompat.START)
+        testBtn.setOnClickListener { //드로어 레이아웃
+            if (drawerLayout.isDrawerOpen(GravityCompat.END)) {
+                drawerLayout.closeDrawer(GravityCompat.END)
             } else {
-                drawerLayout.openDrawer(GravityCompat.START)
+                drawerLayout.openDrawer(GravityCompat.END)
             }
         }
 

@@ -10,6 +10,8 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 
 class autoGenerate : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,7 +23,16 @@ class autoGenerate : AppCompatActivity() {
         //이 리스트의 내용을 서버로 넘겨주면 된다.
 
         val parentLayout = findViewById<LinearLayout>(R.id.tag_layout)
+        val testBtn = findViewById<Button>(R.id.testbtn)
+        val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
 
+        testBtn.setOnClickListener { //드로어 레이아웃
+            if (drawerLayout.isDrawerOpen(GravityCompat.END)) {
+                drawerLayout.closeDrawer(GravityCompat.END)
+            } else {
+                drawerLayout.openDrawer(GravityCompat.END)
+            }
+        }
         // 돋보기 버튼으로 여행지 입력
         tag.setOnTouchListener { _, event ->
             val DRAWABLE_RIGHT = 2 // 오른쪽 그림

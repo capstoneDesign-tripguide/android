@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.drawerlayout.widget.DrawerLayout
-
+    android:id="@+id/drawer_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -9,175 +9,135 @@
     android:orientation="vertical"
     android:background="#ffffff"
     tools:context=".MainActivity">
+    <!--    main contents-->
     <LinearLayout
+        android:id="@+id/main_contents"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="5dp"
-            android:fontFamily="@font/jua_ttf"
-            android:text="TRIP GUIDE"
-            android:textColor="#0000B0"
-            android:textSize="25dp" />
-
-            >
-
-        <TextView
-            android:id="@+id/loginBtn"
-            android:layout_marginRight="20dp"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="right|center"
-            android:layout_weight="1"
-            android:textColor="#000000"
-            android:textSize="15dp"
-            android:text="로그인" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="350dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/skyblue_background"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="20dp"
-            android:fontFamily="@font/jua_ttf"
-            android:text="어디로 여행을 떠나시나요?"
-            android:textColor="#000000"
-            android:textSize="25dp" />
-
-        <AutoCompleteTextView
-            android:id="@+id/destiation"
-            android:layout_width="300dp"
             android:layout_height="50dp"
-            android:layout_marginTop="20dp"
-            android:completionThreshold="1"
-            android:drawableRight="@drawable/searchbutton"
-            android:fontFamily="@font/jua_ttf"
-            android:hint="가고 싶은 여행지를 입력해보세요!"
-            android:textSize="12dp"
-            android:layout_gravity="center"/>
+            android:background="#ffffff">
+
+            <Button
+                android:id="@+id/testbtn"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:layout_editor_absoluteY="0dp" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-
-        <Button
-            android:id="@+id/directBtn"
-            android:textSize="17dp"
-            android:background="@drawable/btn_repple_ex"
-            android:textColor="#ffffff"
-            android:fontFamily="@font/jua_ttf"
-            android:layout_gravity="center"
-            android:text="수동 일정 생성"
-            android:layout_width="300dp"
-            android:layout_height="70dp"
-            android:layout_marginTop="20dp"/>
-
-        <Button
-            android:id="@+id/autoBtn"
-            android:layout_width="300dp"
-            android:layout_height="70dp"
-            android:layout_gravity="center"
-            android:layout_marginBottom="50dp"
-            android:background="@drawable/btn_repple_ex"
-            android:fontFamily="@font/jua_ttf"
-            android:text="자동 일정 생성"
-            android:textColor="#ffffff"
-            android:textSize="17dp"
-            android:layout_marginTop="20dp"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:orientation="vertical"
-        android:layout_marginTop="30dp"
-        >
-
-
-        <Space
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1" />
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="5dp"
+                    android:fontFamily="@font/jua_ttf"
+                    android:text="TRIP GUIDE"
+                    android:textColor="#0000B0"
+                    android:textSize="25dp" />
+
+                    >
+
+                <TextView
+                    android:id="@+id/loginBtn"
+                    android:layout_marginRight="20dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="right|center"
+                    android:layout_weight="1"
+                    android:textColor="#000000"
+                    android:textSize="15dp"
+                    android:text="로그인" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="350dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/skyblue_background"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="20dp"
+                    android:fontFamily="@font/jua_ttf"
+                    android:text="어디로 여행을 떠나시나요?"
+                    android:textColor="#000000"
+                    android:textSize="25dp" />
+
+                <AutoCompleteTextView
+                    android:id="@+id/destiation"
+                    android:layout_width="300dp"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="20dp"
+                    android:completionThreshold="1"
+                    android:drawableRight="@drawable/searchbutton"
+                    android:fontFamily="@font/jua_ttf"
+                    android:hint="가고 싶은 여행지를 입력해보세요!"
+                    android:textSize="12dp"
+                    android:layout_gravity="center"/>
 
 
+
+                <Button
+                    android:id="@+id/directBtn"
+                    android:textSize="17dp"
+                    android:background="@drawable/btn_repple_ex"
+                    android:textColor="#ffffff"
+                    android:fontFamily="@font/jua_ttf"
+                    android:layout_gravity="center"
+                    android:text="수동 일정 생성"
+                    android:layout_width="300dp"
+                    android:layout_height="70dp"
+                    android:layout_marginTop="20dp"/>
+
+                <Button
+                    android:id="@+id/autoBtn"
+                    android:layout_width="300dp"
+                    android:layout_height="70dp"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="50dp"
+                    android:background="@drawable/btn_repple_ex"
+                    android:fontFamily="@font/jua_ttf"
+                    android:text="자동 일정 생성"
+                    android:textColor="#ffffff"
+                    android:textSize="17dp"
+                    android:layout_marginTop="20dp"/>
+            </LinearLayout>
+
+        </LinearLayout>
 
     </LinearLayout>
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
 
-    </ScrollView>
-
-
-
-
-</LinearLayout>
-
-    <LinearLayout
+    <!--    Navigation contents-->
+    <com.google.android.material.navigation.NavigationView
         android:id="@+id/navigation_view"
-        android:layout_width="280dp"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:orientation="vertical"
-        android:background="#FFFFFF">
-
-    <TextView
-        android:id="@+id/menu_home"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="홈"
-        android:padding="16dp"
-        android:textSize="16sp"
-        android:clickable="true"
-        android:onClick="onMenuClick" />
+        android:layout_gravity="end"
+        android:fitsSystemWindows="true" >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="hello world"/>
 
 
-    <TextView
-        android:id="@+id/menu_profile"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="프로필"
-        android:padding="16dp"
-        android:textSize="16sp"
-        android:clickable="true"
-        android:onClick="onMenuClick" />
-
-
-    <TextView
-        android:id="@+id/menu_settings"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="설정"
-        android:padding="16dp"
-        android:textSize="16sp"
-        android:clickable="true"
-        android:onClick="onMenuClick" />
-
-
-    <TextView
-        android:id="@+id/menu_logout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="로그아웃"
-        android:padding="16dp"
-        android:textSize="16sp"
-        android:clickable="true"
-        android:onClick="onMenuClick" />
-    </LinearLayout>
+    </com.google.android.material.navigation.NavigationView>
 </androidx.drawerlayout.widget.DrawerLayout>

@@ -16,6 +16,8 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import com.example.secondcapstone.databinding.ActivityCalendarNextBinding
 import com.example.secondcapstone.databinding.ActivityMainBinding
 import com.example.secondcapstone.databinding.LoginActivityBinding
@@ -57,8 +59,16 @@ class loginActivity : AppCompatActivity() {
         val editText_pw = findViewById<EditText>(R.id.editText_pw) //패스워드
         val sign_up_btn = findViewById<TextView>(R.id.sign_up)
         val kakao_login_btn = findViewById<Button>(R.id.kakaoLoginBtn)
+        val testBtn = findViewById<Button>(R.id.testbtn)
+        val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
 
-
+        testBtn.setOnClickListener { //드로어 레이아웃
+            if (drawerLayout.isDrawerOpen(GravityCompat.END)) {
+                drawerLayout.closeDrawer(GravityCompat.END)
+            } else {
+                drawerLayout.openDrawer(GravityCompat.END)
+            }
+        }
         kakao_login_btn.setOnClickListener { //카카오 로그인
             UserApiClient.instance.loginWithKakaoTalk(context) { token, error ->
                 if (error != null) {

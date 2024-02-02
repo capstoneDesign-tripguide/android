@@ -13,6 +13,8 @@ import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import com.example.secondcapstone.databinding.ActivityMainBinding
 import com.example.secondcapstone.databinding.LoginActivityBinding
 import com.kakao.sdk.common.KakaoSdk
@@ -32,7 +34,16 @@ class MainActivity : AppCompatActivity() {
         val destination = resources.getStringArray(R.array.place)
         val autoCompleteTextView = findViewById<AutoCompleteTextView>(R.id.destiation)
         val arrayAdapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, destination)
+        val testBtn = findViewById<Button>(R.id.testbtn)
+        val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
 
+        testBtn.setOnClickListener { //드로어 레이아웃
+            if (drawerLayout.isDrawerOpen(GravityCompat.END)) {
+                drawerLayout.closeDrawer(GravityCompat.END)
+            } else {
+                drawerLayout.openDrawer(GravityCompat.END)
+            }
+        }
         autoCompleteTextView.setAdapter(arrayAdapter)
 
         supportActionBar?.apply {
