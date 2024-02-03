@@ -8,6 +8,8 @@ import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
+import android.view.View
+import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Button
@@ -34,16 +36,32 @@ class MainActivity : AppCompatActivity() {
         val destination = resources.getStringArray(R.array.place)
         val autoCompleteTextView = findViewById<AutoCompleteTextView>(R.id.destiation)
         val arrayAdapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, destination)
-        val testBtn = findViewById<Button>(R.id.testbtn)
-        val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
 
-        testBtn.setOnClickListener { //드로어 레이아웃
+        //네이게이션 요소들
+        val navBtn = findViewById<Button>(R.id.testbtn)
+        val nav_close_btn = findViewById<Button>(R.id.close_nav_btn)
+        val drawerLayout = findViewById<DrawerLayout>(R.id.drawer_layout)
+        val navLayout = findViewById<com.google.android.material.navigation.NavigationView>(R.id.navigation_view)
+        val edit_user_btn = findViewById<Button>(R.id.btn_edituser)
+
+
+        navBtn.setOnClickListener { //드로어 레이아웃
             if (drawerLayout.isDrawerOpen(GravityCompat.END)) {
                 drawerLayout.closeDrawer(GravityCompat.END)
             } else {
                 drawerLayout.openDrawer(GravityCompat.END)
             }
         }
+
+        nav_close_btn.setOnClickListener {
+            drawerLayout.closeDrawer(GravityCompat.END)
+        }
+
+        edit_user_btn.setOnClickListener {
+            var intent = Intent(this, edit_user::class.java)
+            startActivity(intent)
+        }
+
         autoCompleteTextView.setAdapter(arrayAdapter)
 
         supportActionBar?.apply {
