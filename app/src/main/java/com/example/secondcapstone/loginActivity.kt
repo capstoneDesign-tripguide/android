@@ -7,6 +7,8 @@ import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
@@ -69,6 +71,24 @@ class loginActivity : AppCompatActivity() {
                 drawerLayout.openDrawer(GravityCompat.END)
             }
         }
+
+        //비밀번호 텍스트 마스킹
+        editText_pw.addTextChangedListener(object: TextWatcher{
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {  }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                val maskedText = maskPassword(p0)
+                editText_pw.removeTextChangedListener(this)
+                editText_pw.setText(maskedText)
+                editText_pw.setSelection(maskedText.length)
+                editText_pw.addTextChangedListener(this)
+            }
+
+            override fun afterTextChanged(p0: Editable?) {  }
+
+        })
+
+
         kakao_login_btn.setOnClickListener { //카카오 로그인
             UserApiClient.instance.loginWithKakaoTalk(context) { token, error ->
                 if (error != null) {
@@ -79,6 +99,7 @@ class loginActivity : AppCompatActivity() {
                 }
             }
         }
+
         val retrofit = Retrofit.Builder() //retrofit 객체 생성
             .baseUrl("https://jsonplaceholder.typicode.com") //서버 주소
             .addConverterFactory(GsonConverterFactory.create())
@@ -177,5 +198,18 @@ class loginActivity : AppCompatActivity() {
 
     }
 
+    private fun maskPassword(s: CharSequence?): String { // CharSequence 객체 s를 매개변수로 받음
+        // 최근에 입력된 문자만 표시하고 나머지는 특수문자로 마스킹하기
+        val maskedText = StringBuilder()
+        s?.let {
+            for (i in 0 until it.length - 1) {
+                maskedText.append("*")
+            }
+            if (it.isNotEmpty()) {
+                maskedText.append(it[it.length - 1]) // 마지막 문자는 표시
+            }
+        }
+        return maskedText.toString()
+    }
 
 }

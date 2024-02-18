@@ -2,6 +2,8 @@ package com.example.secondcapstone
 
 import android.app.DatePickerDialog
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.Button
@@ -47,6 +49,46 @@ class signUp : AppCompatActivity() {
 
         alarm.visibility = View.GONE //처음에 문구는 보이지 않음
 
+        //비밀번호 텍스트 마스킹
+        input_password.addTextChangedListener(object: TextWatcher{
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            // 텍스트 변경 전에 호출되는 TextWatcher의 필수 멤버 함수.
+            // 여기선 텍스트 변경 전에 할 일이 없으니까 패스
+            }
+
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                // 텍스트 변경 시 호출되는 TextWatcher의 필수 멤버 함수
+                val maskedText = maskPassword(s) //마스킹된 문자열
+                input_password.removeTextChangedListener(this) // setText 함수가 무한 호출될 수 있으므로 텍스트 와처 제거
+                //setText를 호출하면 또 다시 TextWatcher의 메서드가 호출될 수 있기 때문이다.
+                input_password.setText(maskedText) // 마스킹된 텍스트 설정
+                input_password.setSelection(maskedText.length) // 커서를 마지막 위치로 이동
+                input_password.addTextChangedListener(this) // 텍스트 변경 리스너 다시 추가
+            }
+            override fun afterTextChanged(p0: Editable?) {
+                // 텍스트 변경 후에 호출되는 TextWatcher의 필수 멤버 함수.
+                // 여기선 텍스트 변경 전에 할 일이 없으니까 패스
+            }
+        })
+
+        //비밀번호 확인 텎스트 마스킹
+        check_password.addTextChangedListener(object: TextWatcher{
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {  }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                val maskedText = maskPassword(p0)
+                check_password.removeTextChangedListener(this)
+                check_password.setText(maskedText)
+                check_password.setSelection(maskedText.length)
+                check_password.addTextChangedListener(this)
+            }
+
+            override fun afterTextChanged(p0: Editable?) {  }
+
+        })
+
+        //회원가입 버튼 클릭 이벤트 처리
         SIGNUP.setOnClickListener {
             val ID = input_userid.text.toString()
             val PASSWORD = input_password.text.toString()
@@ -86,7 +128,7 @@ class signUp : AppCompatActivity() {
                 alarm.text = "이메일을 입력해 주세요."
                 alarm.visibility = View.VISIBLE
             }
-            else{
+            else{ //정보를 모두 정상적으로 입력 시 서버로 데이터 전송
                 if(alarm.visibility == 1){
                     alarm.visibility = View.GONE
                 }
@@ -104,6 +146,21 @@ class signUp : AppCompatActivity() {
 //        // EditText를 클릭하면 DatePickerDialog를 표시
 //        editTextBirthday.setOnClickListener {
 //            showDatePickerDialog()
+        }
+
+    //텍스트 마스킹 함수. 최근 입력한 문자만 표시하고, 나머지 문자는 *로 마스킹한 채로 반환한다.
+        private fun maskPassword(s: CharSequence?): String { // CharSequence 객체 s를 매개변수로 받음
+            // 최근에 입력된 문자만 표시하고 나머지는 특수문자로 마스킹하기
+            val maskedText = StringBuilder()
+            s?.let {
+                for (i in 0 until it.length - 1) {
+                    maskedText.append("*")
+                }
+                if (it.isNotEmpty()) {
+                    maskedText.append(it[it.length - 1]) // 마지막 문자는 표시
+                }
+            }
+            return maskedText.toString()
         }
     }
 
