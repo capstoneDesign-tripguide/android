@@ -32,10 +32,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         Log.d("test0121", "keyhash : ${Utility.getKeyHash(this)}") //해시키 구하기
 
-        //여행지 목록 자동 완성
-        val destination = resources.getStringArray(R.array.place)
-        val autoCompleteTextView = findViewById<AutoCompleteTextView>(R.id.destiation)
-        val arrayAdapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, destination)
+
 
         //네이게이션 요소들
         val navBtn = findViewById<Button>(R.id.testbtn)
@@ -62,30 +59,14 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        autoCompleteTextView.setAdapter(arrayAdapter)
+
 
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
             setHomeAsUpIndicator(R.drawable.google_login)
         }
 
-        //돋보기 버튼으로 여행지 입력
-        autoCompleteTextView.setOnTouchListener { _, event ->
-            val DRAWABLE_RIGHT = 2 // Index of drawableRight in the array
 
-            if (event.action == MotionEvent.ACTION_UP) {
-                if (event.rawX >= (autoCompleteTextView.right - autoCompleteTextView.compoundDrawables[DRAWABLE_RIGHT].bounds.width())) {
-                    var intent = Intent(this, calendar::class.java)
-                    val travel_spot = autoCompleteTextView.text.toString()
-                    intent.putExtra("travel_spot", travel_spot) //putExtra()는 startActivity() 이전에 실행돼야 함
-                    startActivity(intent)
-                    overridePendingTransition(R.anim.slide_from_top, 0) // 시작 애니메이션, 종료 애니메이션 적용. 0으로 설정하면 디폴트
-
-                    return@setOnTouchListener true
-                }
-            }
-            false
-        }
 
         //로그인 버튼 클릭 시 액티비티 전환
         val loginBtn = findViewById<TextView>(R.id.loginBtn)
@@ -101,7 +82,7 @@ class MainActivity : AppCompatActivity() {
         val directButton = findViewById<Button>(R.id.directBtn)
 
         autoButton.setOnClickListener {
-            var intent = Intent(this, autoGenerate::class.java)
+            var intent = Intent(this, calendar::class.java)
             startActivity(intent)
         }
 

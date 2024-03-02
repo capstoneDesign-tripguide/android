@@ -11,6 +11,9 @@ import android.os.Bundle
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
 import android.util.Log
+import android.view.MotionEvent
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
@@ -31,16 +34,46 @@ class calendar : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.calendar)
+
+
+        //돋보기 버튼으로 여행지 입력
+//        autoCompleteTextView.setOnTouchListener { _, event ->
+//            val DRAWABLE_RIGHT = 2 // Index of drawableRight in the array
+//
+//            if (event.action == MotionEvent.ACTION_UP) {
+//                if (event.rawX >= (autoCompleteTextView.right - autoCompleteTextView.compoundDrawables[DRAWABLE_RIGHT].bounds.width())) {
+//                    var intent = Intent(this, calendar::class.java)
+//                    val travel_spot = autoCompleteTextView.text.toString()
+//                    intent.putExtra("travel_spot", travel_spot) //putExtra()는 startActivity() 이전에 실행돼야 함
+//                    startActivity(intent)
+//                    overridePendingTransition(R.anim.slide_from_top, 0) // 시작 애니메이션, 종료 애니메이션 적용. 0으로 설정하면 디폴트
+//
+//                    return@setOnTouchListener true
+//                }
+//            }
+//            false
+//        }
+
+        val destination = findViewById<Button>(R.id.search_travel_spot)
+        destination.setOnClickListener {
+            var intent = Intent(this, select_spot::class.java)
+            startActivity(intent)
+        }
+
+
+
+
         val closeBtn = findViewById<Button>(R.id.closeButton)
+
 
 
         val travelDate = findViewById<TextView>(R.id.travelDate)
 
         val calendarView =
             findViewById<com.prolificinteractive.materialcalendarview.MaterialCalendarView>(R.id.calendarview)
-        val travel_spot = findViewById<TextView>(R.id.travel_spot)
+        //val travel_spot = findViewById<TextView>(R.id.travel_spot)
         val get_travel_spot = intent.getStringExtra("travel_spot")
-        travel_spot.text = get_travel_spot
+        //travel_spot.text = get_travel_spot
 
         // 월, 요일을 한글로 보이게 설정 (MonthArrayTitleFormatter의 작동을 확인하려면 밑의 setTitleFormatter()를 지운다)
         calendarView.setTitleFormatter(MonthArrayTitleFormatter(resources.getTextArray(R.array.custom_months)))
@@ -81,9 +114,12 @@ class calendar : AppCompatActivity() {
         //시작일, 종료일 데이터 전달
         closeBtn.setOnClickListener {
             if (startDay != null && endDay != null){
-                var intent = Intent(this, calendar_nextActivity::class.java)
-                intent.putExtra("startDay", "$startDay")
-                intent.putExtra("endDay", "${endDay}")
+                  //calendar_nextActivity로 이동
+//                var intent = Intent(this, calendar_nextActivity::class.java)
+//                intent.putExtra("startDay", "$startDay")
+//                intent.putExtra("endDay", "${endDay}")
+//                startActivity(intent)
+                var intent = Intent(this, autoGenerate::class.java)
                 startActivity(intent)
                 finish()}
             else{

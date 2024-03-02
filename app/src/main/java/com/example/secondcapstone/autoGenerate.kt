@@ -23,6 +23,7 @@ class autoGenerate : AppCompatActivity() {
         //이 리스트의 내용을 서버로 넘겨주면 된다.
 
         val parentLayout = findViewById<LinearLayout>(R.id.tag_layout)
+
         val testBtn = findViewById<Button>(R.id.testbtn)
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
 

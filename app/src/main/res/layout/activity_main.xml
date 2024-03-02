@@ -61,25 +61,15 @@
 
                 <TextView
                     android:layout_width="wrap_content"
-                    android:layout_height="30dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="20dp"
                     android:fontFamily="@font/jua_ttf"
-                    android:text="어디로 여행을 떠나시나요?"
+                    android:text="모드 선택"
                     android:textColor="#000000"
-                    android:textSize="25dp" />
+                    android:textSize="40dp" />
 
-                <AutoCompleteTextView
-                    android:id="@+id/destiation"
-                    android:layout_width="300dp"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="20dp"
-                    android:completionThreshold="1"
-                    android:drawableRight="@drawable/searchbutton"
-                    android:fontFamily="@font/jua_ttf"
-                    android:hint="가고 싶은 여행지를 입력해보세요!"
-                    android:textSize="12dp"
-                    android:layout_gravity="center"/>
+
 
 
 
@@ -92,13 +82,13 @@
                     android:layout_gravity="center"
                     android:text="수동 일정 생성"
                     android:layout_width="300dp"
-                    android:layout_height="70dp"
-                    android:layout_marginTop="20dp"/>
+                    android:layout_height="80dp"
+                    android:layout_marginTop="34dp"/>
 
                 <Button
                     android:id="@+id/autoBtn"
                     android:layout_width="300dp"
-                    android:layout_height="70dp"
+                    android:layout_height="80dp"
                     android:layout_gravity="center"
                     android:layout_marginBottom="50dp"
                     android:background="@drawable/btn_repple_ex"
@@ -106,7 +96,7 @@
                     android:text="자동 일정 생성"
                     android:textColor="#ffffff"
                     android:textSize="17dp"
-                    android:layout_marginTop="20dp"/>
+                    android:layout_marginTop="40dp"/>
             </LinearLayout>
             
         </LinearLayout>

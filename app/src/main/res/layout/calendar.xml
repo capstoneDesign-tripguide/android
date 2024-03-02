@@ -7,45 +7,46 @@
     android:layout_height="match_parent"
     tools:context=".calendar"
     android:orientation="vertical">
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-
-        <TextView
-            android:layout_marginLeft="25dp"
-            android:layout_marginTop="30dp"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:fontFamily="@font/jua_ttf"
-            android:text="여행지는 "
-            android:textSize="30dp"
-            android:textColor="#000000"/>
-
-        <TextView
-            android:layout_marginTop="30dp"
-            android:id="@+id/travel_spot"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:fontFamily="@font/jua_ttf"
-            android:text="tarvel_spot"
-            android:textSize="30dp"
-            android:textColor="#000000"/>
-
-    </LinearLayout>
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:textColor="@color/black"
-        android:text= "여행 기간은 언제인가요?"
-        android:gravity="center"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="30dp"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
         android:fontFamily="@font/jua_ttf"
-        android:textSize="25dp"/>
+        android:text="여행지 및 계획"
+        android:textSize="40dp"
+        android:textColor="#000000"/>
+
+    <Button
+        android:id="@+id/search_travel_spot"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/search_box"
+        android:completionThreshold="1"
+        android:drawableRight="@drawable/searchbutton"
+        android:paddingRight="10dp"
+        android:fontFamily="@font/jua_ttf"
+        android:hint="가고 싶은 여행지를 입력해보세요!"
+        android:paddingLeft="16dp"
+        android:textSize="15dp" />
+
+
+<!--        <TextView-->
+<!--            android:layout_marginTop="30dp"-->
+<!--            android:id="@+id/travel_spot"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="50dp"-->
+<!--            android:fontFamily="@font/jua_ttf"-->
+<!--            android:text="tarvel_spot"-->
+<!--            android:textSize="30dp"-->
+<!--            android:textColor="#000000"/>-->
 
     <com.prolificinteractive.materialcalendarview.MaterialCalendarView
         android:id="@+id/calendarview"
+        android:layout_marginTop="10dp"
         android:background="@drawable/skyblue_background"
         android:layout_width="match_parent"
         android:layout_height="400dp"
