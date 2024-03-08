@@ -72,16 +72,14 @@
         android:id="@+id/closeButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="선택 완료"
-        android:textSize="25dp"
-        android:background="@drawable/btn_repple_ex"
-        android:textColor="#ffffff"
-        android:fontFamily="@font/jua_ttf"
-        android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
-        />
-
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/btn_repple_ex"
+        android:fontFamily="@font/jua_ttf"
+        android:text="선택 완료"
+        android:textColor="#ffffff"
+        android:textSize="25dp" />
 
 
 </LinearLayout>

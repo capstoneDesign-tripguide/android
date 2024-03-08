@@ -63,7 +63,11 @@ class calendar : AppCompatActivity() {
 
 
 
-        val closeBtn = findViewById<Button>(R.id.closeButton)
+        val closeBtn = findViewById<Button>(R.id.closeButton) //선택 완료 버튼
+        closeBtn.setOnClickListener {
+            var intent = Intent(this, travel_list::class.java)
+            startActivity(intent)
+        }
 
 
 

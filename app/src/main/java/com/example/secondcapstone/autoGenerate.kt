@@ -1,5 +1,6 @@
 package com.example.secondcapstone
 
+import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
 import android.view.Gravity
@@ -18,13 +19,18 @@ class autoGenerate : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.auto_generate)
 
+        val addBtn = findViewById<Button>(R.id.nextBtn)
+        addBtn.setOnClickListener {
+            var intent = Intent(this, travel_list::class.java)
+            startActivity(intent)
+        }
         val tag = findViewById<EditText>(R.id.tag)
         var taglist = mutableListOf<String>() // var 리스트니까 mutableListOf로 선언
         //이 리스트의 내용을 서버로 넘겨주면 된다.
 
         val parentLayout = findViewById<LinearLayout>(R.id.tag_layout)
 
-        val testBtn = findViewById<Button>(R.id.testbtn)
+        val testBtn = findViewById<Button>(R.id.testbtn) //드로어 여는 버튼
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
 
         testBtn.setOnClickListener { //드로어 레이아웃

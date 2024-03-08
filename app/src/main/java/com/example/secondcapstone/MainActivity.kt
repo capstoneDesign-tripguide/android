@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity() {
 
 
 
-        //네이게이션 요소들
+        //네비게이션 요소들
         val navBtn = findViewById<Button>(R.id.testbtn)
         val nav_close_btn = findViewById<Button>(R.id.close_nav_btn)
         val drawerLayout = findViewById<DrawerLayout>(R.id.drawer_layout)
