@@ -16,6 +16,9 @@
         android:theme="@style/Theme.SecondCapstone"
         tools:targetApi="31">
         <activity
+            android:name=".plan_list"
+            android:exported="false" />
+        <activity
             android:name=".travel_item_layout"
             android:exported="false" />
         <activity

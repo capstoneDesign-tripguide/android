@@ -1,10 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".travel_list"
+    tools:context=".plan_list"
     android:orientation="vertical">
     <LinearLayout
         android:layout_width="match_parent"
@@ -13,31 +14,22 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="여행지 추가"
+            android:text="일정 편집"
             android:textSize="30dp"
             android:fontFamily="@font/jua_ttf"
             android:textColor="#000000"
             android:paddingLeft="20dp"
             android:paddingTop="20dp"/>
-        <EditText
-            android:id="@+id/tag"
-            android:layout_width="300dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="20dp"
-            android:completionThreshold="1"
-            android:drawableRight="@drawable/searchbutton"
-            android:fontFamily="@font/jua_ttf"
-            android:hint="Search"
-            android:textSize="15dp" />
+
     </LinearLayout>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcview"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        tools:listitem="@layout/activity_travel_item_layout" />
+        tools:listitem="@layout/plan_list_layout" />
     <Button
+        android:id="@+id/next"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/btn_repple_ex"
@@ -45,6 +37,4 @@
         android:textSize="20dp"
         android:text="선택 완료"
         android:layout_marginBottom="5dp"/>
-
-
 </LinearLayout>

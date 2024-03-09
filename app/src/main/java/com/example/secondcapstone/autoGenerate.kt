@@ -21,7 +21,7 @@ class autoGenerate : AppCompatActivity() {
 
         val addBtn = findViewById<Button>(R.id.nextBtn)
         addBtn.setOnClickListener {
-            var intent = Intent(this, travel_list::class.java)
+            var intent = Intent(this, plan_list::class.java)
             startActivity(intent)
         }
         val tag = findViewById<EditText>(R.id.tag)
