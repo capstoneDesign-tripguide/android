@@ -3,7 +3,9 @@ package com.example.secondcapstone
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 
 class plan_adpater(val itemList: ArrayList<plan_items>):
@@ -12,6 +14,16 @@ class plan_adpater(val itemList: ArrayList<plan_items>):
     inner class plan_Viewholder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val day = itemView.findViewById<TextView>(R.id.day)
         val date = itemView.findViewById<TextView>(R.id.date)
+        val addBtn = itemView.findViewById<Button>(R.id.add)
+
+        init { // 클릭 이벤트를 init때 생성해야 함 이유는 모르겠다..
+            addBtn.setOnClickListener {
+                Toast.makeText(itemView.context, "clicked.", Toast.LENGTH_SHORT).show()
+                val clickedPosition = adapterPosition
+                // 여기에 클릭 이벤트에 대한 로직을 추가하세요.
+            }
+        }
+
     }
 
     override fun onCreateViewHolder(

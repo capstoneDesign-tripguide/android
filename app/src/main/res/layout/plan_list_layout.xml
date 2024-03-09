@@ -30,9 +30,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/jua_ttf"
-                android:textSize="25dp"
+                android:textSize="15dp"
                 android:text="n"
                 android:layout_marginLeft="5dp"
+                android:layout_marginTop="5dp"
                 android:textColor="#000000"/>
 
             <TextView
@@ -42,7 +43,7 @@
                 android:fontFamily="@font/jua_ttf"
                 android:textSize="25dp"
                 android:text="날짜/요일"
-                android:layout_marginLeft="5dp"
+                android:layout_marginLeft="10dp"
                 android:textColor="#000000"/>
         </LinearLayout>
 
@@ -53,7 +54,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <Button
-                android:id="@+id/item_rating"
+                android:id="@+id/add"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:fontFamily="@font/jua_ttf"

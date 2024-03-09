@@ -21,6 +21,7 @@ class plan_list : AppCompatActivity() {
 
         val recyclerView = findViewById<RecyclerView>(R.id.rcview)
         val itemList = ArrayList<plan_items>() //data class로 리스트 선언)
+
         itemList.add(plan_items("1", "3/9"))
         itemList.add(plan_items("2", "3/10"))
         itemList.add(plan_items("3", "3/11"))
