@@ -1,49 +1,24 @@
 package com.example.secondcapstone
 
-import android.content.Intent
 import android.graphics.Typeface
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.Gravity
 import android.view.MotionEvent
-import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
-import androidx.core.view.GravityCompat
-import androidx.drawerlayout.widget.DrawerLayout
 
-class autoGenerate : AppCompatActivity() {
+class editPlaceActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.auto_generate)
-        val dateList = intent.getStringArrayListExtra("dateList") //Calendar에서 받은 날짜
-        Log.d("secondList", "$dateList")
-
-        val addBtn = findViewById<Button>(R.id.nextBtn)
-        addBtn.setOnClickListener {
-            var intent = Intent(this, plan_list_second::class.java)
-            intent.putStringArrayListExtra("dateList",ArrayList(dateList))
-            startActivity(intent)
-        }
+        setContentView(R.layout.edit_place_activity)
         val tag = findViewById<EditText>(R.id.tag)
         var taglist = mutableListOf<String>() // var 리스트니까 mutableListOf로 선언
         //이 리스트의 내용을 서버로 넘겨주면 된다.
 
         val parentLayout = findViewById<LinearLayout>(R.id.tag_layout)
-
-        val testBtn = findViewById<Button>(R.id.testbtn) //드로어 여는 버튼
-        val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
-
-        testBtn.setOnClickListener { //드로어 레이아웃
-            if (drawerLayout.isDrawerOpen(GravityCompat.END)) {
-                drawerLayout.closeDrawer(GravityCompat.END)
-            } else {
-                drawerLayout.openDrawer(GravityCompat.END)
-            }
-        }
         // 돋보기 버튼으로 여행지 입력
         tag.setOnTouchListener { _, event ->
             val DRAWABLE_RIGHT = 2 // 오른쪽 그림
@@ -110,5 +85,16 @@ class autoGenerate : AppCompatActivity() {
             }
             false
         }
+        val day = intent.getStringExtra("day")
+        val date = intent.getStringExtra("date")
+
+
+        // 가져온 데이터를 사용하여 원하는 작업 수행
+        // 예: 텍스트뷰에 데이터 설정
+        val dayTextView = findViewById<TextView>(R.id.editPlaceDayTextView)
+        val dateTextView = findViewById<TextView>(R.id.editPlaceDateTextView)
+
+        dayTextView.text = day
+        dateTextView.text = date
     }
 }

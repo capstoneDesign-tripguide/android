@@ -31,37 +31,17 @@ import java.util.Calendar
 import org.threeten.bp.DayOfWeek
 
 class calendar : AppCompatActivity() {
+    //lateinit은 전역 변수 느낌
+    private lateinit var dateList: List<String>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.calendar)
-
-
-        //돋보기 버튼으로 여행지 입력
-//        autoCompleteTextView.setOnTouchListener { _, event ->
-//            val DRAWABLE_RIGHT = 2 // Index of drawableRight in the array
-//
-//            if (event.action == MotionEvent.ACTION_UP) {
-//                if (event.rawX >= (autoCompleteTextView.right - autoCompleteTextView.compoundDrawables[DRAWABLE_RIGHT].bounds.width())) {
-//                    var intent = Intent(this, calendar::class.java)
-//                    val travel_spot = autoCompleteTextView.text.toString()
-//                    intent.putExtra("travel_spot", travel_spot) //putExtra()는 startActivity() 이전에 실행돼야 함
-//                    startActivity(intent)
-//                    overridePendingTransition(R.anim.slide_from_top, 0) // 시작 애니메이션, 종료 애니메이션 적용. 0으로 설정하면 디폴트
-//
-//                    return@setOnTouchListener true
-//                }
-//            }
-//            false
-//        }
 
         val destination = findViewById<Button>(R.id.search_travel_spot)
         destination.setOnClickListener {
             var intent = Intent(this, select_spot::class.java)
             startActivity(intent)
         }
-
-
-
 
         val closeBtn = findViewById<Button>(R.id.closeButton) //선택 완료 버튼
         closeBtn.setOnClickListener {
@@ -91,10 +71,17 @@ class calendar : AppCompatActivity() {
         var endDay: String? = null
         calendarView.setOnRangeSelectedListener(object : OnRangeSelectedListener {
             override fun onRangeSelected(widget: MaterialCalendarView, dates: List<CalendarDay>) {
+                //dates 리스트는 이런식으로 생김: [CalendarDay{2024-3-20}, CalendarDay{2024-3-21}]
                 startDay = dates[0].date.toString()
                 endDay = dates[dates.size - 1].date.toString()
-                Log.e(ContentValues.TAG, "시작일 : $startDay, 종료일 : $endDay")
-                Log.e(ContentValues.TAG, "$dates[0]")
+//                Log.e(ContentValues.TAG, "시작일 : $startDay, 종료일 : $endDay")
+//                Log.e(ContentValues.TAG, "$dates[0]")
+//                Log.d(ContentValues.TAG, "$dates")
+
+                //리스트의 각 요소는 연도-월-일 순으로 나오는데, 연도는 제외하고 싶음
+                //따라서 연도(4)와 첫 '-'을 뺴기 위해 substring(5) 사용
+                dateList = dates.map { it.date.toString().substring(5) }.toList()
+                Log.d(ContentValues.TAG, "$dateList")
                 travelDate.text = "출발일: ${startDay}\n 도착일: ${endDay}"
             }
         })
@@ -118,12 +105,13 @@ class calendar : AppCompatActivity() {
         //시작일, 종료일 데이터 전달
         closeBtn.setOnClickListener {
             if (startDay != null && endDay != null){
-                  //calendar_nextActivity로 이동
-//                var intent = Intent(this, calendar_nextActivity::class.java)
-//                intent.putExtra("startDay", "$startDay")
-//                intent.putExtra("endDay", "${endDay}")
-//                startActivity(intent)
+                //calendar_nextActivity로 이동
                 var intent = Intent(this, autoGenerate::class.java)
+                Log.d("secondList", "$dateList")
+
+                //list라서 putStringArrayListExtra 함수를 사용하고, ArrayList함수로 변형해서 전달해야 함
+                //받을때도 getStringArrayListExtra 함수 사용
+                intent.putStringArrayListExtra("dateList",ArrayList(dateList))
                 startActivity(intent)
                 finish()}
             else{

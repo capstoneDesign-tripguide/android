@@ -1,5 +1,7 @@
 package com.example.secondcapstone
 
+import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,11 +17,17 @@ class plan_adpater(val itemList: ArrayList<plan_items>):
         val day = itemView.findViewById<TextView>(R.id.day)
         val date = itemView.findViewById<TextView>(R.id.date)
         val addBtn = itemView.findViewById<Button>(R.id.add)
-
         init { // 클릭 이벤트를 init때 생성해야 함 이유는 모르겠다..
+
             addBtn.setOnClickListener {
-                Toast.makeText(itemView.context, "clicked.", Toast.LENGTH_SHORT).show()
                 val clickedPosition = adapterPosition
+                val clickedItem = itemList[clickedPosition]
+
+                val intent = Intent(itemView.context, editPlaceActivity::class.java)
+                intent.putExtra("day", clickedItem.day)
+                intent.putExtra("date", clickedItem.date)
+                itemView.context.startActivity(intent)
+                Toast.makeText(itemView.context, "${clickedItem.day}", Toast.LENGTH_SHORT).show()
                 // 여기에 클릭 이벤트에 대한 로직을 추가하세요.
             }
         }
@@ -31,6 +39,9 @@ class plan_adpater(val itemList: ArrayList<plan_items>):
         viewType: Int
     ): plan_adpater.plan_Viewholder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.plan_list_layout, parent, false)
+        val button = view.findViewById<Button>(R.id.add)
+
+
         return plan_Viewholder(view)
     }
 
@@ -38,6 +49,7 @@ class plan_adpater(val itemList: ArrayList<plan_items>):
         //return itemList.count() //itemList는 class의 매개변수로 줌
         holder.day.text = itemList[position].day
         holder.date.text = itemList[position].date
+        val button = Button(holder.itemView.context)
 
     }
 
