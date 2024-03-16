@@ -24,7 +24,7 @@ class autoGenerate : AppCompatActivity() {
 
         val addBtn = findViewById<Button>(R.id.nextBtn)
         addBtn.setOnClickListener {
-            var intent = Intent(this, plan_list_second::class.java)
+            var intent = Intent(this, plan_list::class.java)
             intent.putStringArrayListExtra("dateList",ArrayList(dateList))
             startActivity(intent)
         }

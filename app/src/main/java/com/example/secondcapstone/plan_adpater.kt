@@ -10,9 +10,11 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 
-class plan_adpater(val itemList: ArrayList<plan_items>):
+class plan_adpater(val itemList: ArrayList<plan_items>, private val listener: OnItemClickListener):
     RecyclerView.Adapter<plan_adpater.plan_Viewholder>() { //어댑터 상속
-
+    interface OnItemClickListener {
+        fun onItemClick(position: Int)
+    }
     inner class plan_Viewholder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val day = itemView.findViewById<TextView>(R.id.day)
         val date = itemView.findViewById<TextView>(R.id.date)
@@ -21,14 +23,16 @@ class plan_adpater(val itemList: ArrayList<plan_items>):
 
             addBtn.setOnClickListener {
                 val clickedPosition = adapterPosition
+                Log.d("position", "$clickedPosition")
                 val clickedItem = itemList[clickedPosition]
 
-                val intent = Intent(itemView.context, editPlaceActivity::class.java)
+                val intent = Intent(itemView.context, travel_list::class.java)
                 intent.putExtra("day", clickedItem.day)
                 intent.putExtra("date", clickedItem.date)
                 itemView.context.startActivity(intent)
-                Toast.makeText(itemView.context, "${clickedItem.day}", Toast.LENGTH_SHORT).show()
-                // 여기에 클릭 이벤트에 대한 로직을 추가하세요.
+                Toast.makeText(itemView.context, "${clickedItem.day} is here", Toast.LENGTH_SHORT).show()
+                listener.onItemClick(clickedPosition)
+
             }
         }
 

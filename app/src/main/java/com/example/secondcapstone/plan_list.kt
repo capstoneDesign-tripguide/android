@@ -9,7 +9,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Recycler
 
-class plan_list : AppCompatActivity() {
+class plan_list : AppCompatActivity(), plan_adpater.OnItemClickListener {
+    private val itemList = ArrayList<plan_items>() //data class로 리스트 선언)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_plan_list)
@@ -25,7 +26,7 @@ class plan_list : AppCompatActivity() {
         }
 
         val recyclerView = findViewById<RecyclerView>(R.id.rcview)
-        val itemList = ArrayList<plan_items>() //data class로 리스트 선언)
+
 
         dateList?.withIndex()?.forEach { (index, date) -> //dateList가 null이 아닌 경우에만 withIndex 함수 호출
             val day = (index + 1).toString()
@@ -33,11 +34,16 @@ class plan_list : AppCompatActivity() {
             itemList.add(planItem)
         }
 
+        Log.d("postion_planItem", "$itemList")
 
-        val rc_adapter = plan_adpater(itemList) //어댑터 생성. 데이터 연결
+        val rc_adapter = plan_adpater(itemList, this) //어댑터 생성. 데이터 연결
         rc_adapter.notifyDataSetChanged()
 
         recyclerView.adapter = rc_adapter //recyclerView에 어댑터 연결
         recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+    }
+    override fun onItemClick(position: Int) {
+        val selectedDestination = itemList[position].date
+        Log.d("position","$selectedDestination")
     }
 }

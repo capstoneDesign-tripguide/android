@@ -42,7 +42,9 @@ class plan_list_second : AppCompatActivity() {
                 //새 레이아웃을 띄우기엔 한계가 있고 트리플도 이런 방식을 채택했음
                 button.setOnClickListener {
                     Toast.makeText(this,"$index", Toast.LENGTH_SHORT).show()
+                    Log.d("travel","1")
                     var intent = Intent(this, travel_list::class.java)
+                    Log.d("travel","2")
                     startActivity(intent)
                 }
 
