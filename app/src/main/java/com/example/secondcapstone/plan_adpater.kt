@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 
 class plan_adpater(val itemList: ArrayList<plan_items>, private val listener: OnItemClickListener):
+
     RecyclerView.Adapter<plan_adpater.plan_Viewholder>() { //어댑터 상속
     interface OnItemClickListener {
         fun onItemClick(position: Int)
@@ -23,14 +24,14 @@ class plan_adpater(val itemList: ArrayList<plan_items>, private val listener: On
 
             addBtn.setOnClickListener {
                 val clickedPosition = adapterPosition
-                Log.d("position", "$clickedPosition")
-                val clickedItem = itemList[clickedPosition]
-
-                val intent = Intent(itemView.context, travel_list::class.java)
-                intent.putExtra("day", clickedItem.day)
-                intent.putExtra("date", clickedItem.date)
-                itemView.context.startActivity(intent)
-                Toast.makeText(itemView.context, "${clickedItem.day} is here", Toast.LENGTH_SHORT).show()
+//                Log.d("position", "clickedPosition is $clickedPosition")
+//                val clickedItem = itemList[clickedPosition]
+//
+//                val intent = Intent(itemView.context, travel_list::class.java)
+//                intent.putExtra("day", clickedItem.day)
+//                intent.putExtra("date", clickedItem.date)
+//                itemView.context.startActivity(intent)
+//                Log.d("position","day is ${clickedItem.day}")
                 listener.onItemClick(clickedPosition)
 
             }

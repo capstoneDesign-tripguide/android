@@ -1,20 +1,31 @@
 package com.example.secondcapstone
 
+import android.app.Activity
+import android.content.Intent
+import android.graphics.Typeface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
+import android.view.Gravity
+import android.widget.Button
+import android.widget.LinearLayout
+import android.widget.TextView
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.delay
 
 class travel_list : AppCompatActivity(), travel_adapter.OnItemClickListener {
     private val itemList = ArrayList<travel_items>()
+    private val addedList = ArrayList<String>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_travel_list)
 
+
         val recyclerView = findViewById<RecyclerView>(R.id.rcview)
-
-
         //나중에 json 데이터 받아서 추가하도록 수정
         itemList.add(travel_items("여행지1", "별점1"))
         itemList.add(travel_items("여행지2", "별점2"))
@@ -35,11 +46,24 @@ class travel_list : AppCompatActivity(), travel_adapter.OnItemClickListener {
         recyclerView.adapter = rc_adapter //recyclerView에 어댑터 연결
         recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
 
-
+        val nextBtn = findViewById<Button>(R.id.next)
+        nextBtn.setOnClickListener {
+            returnDataToPreviousActivity() //add
+        }
     }
 
     override fun onItemClick(position: Int) {
+        //추가 버튼 클릭 시 선택한 여행지 이름을 addedList에 추가
         val selectedDestination = itemList[position].name
-        Log.d("position","$selectedDestination")
+        addedList.add(selectedDestination)
+        Log.d("position","here is travel_list and destination is $selectedDestination")
+
+    }
+    private fun returnDataToPreviousActivity() {
+        Log.d("position","list is composed of $addedList")
+        intent.putStringArrayListExtra("addedList", addedList)
+        intent.putExtra("a","b")
+        setResult(RESULT_OK, intent) // 이전 액티비티로 결과 전달
+        finish() // 현재 액티비티 종료
     }
 }

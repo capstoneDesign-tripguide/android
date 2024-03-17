@@ -30,6 +30,13 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         tools:listitem="@layout/plan_list_layout" />
+    <LinearLayout
+        android:id="@+id/parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+    </LinearLayout>
     <Button
         android:id="@+id/next"
         android:layout_width="match_parent"
@@ -39,4 +46,5 @@
         android:textSize="20dp"
         android:text="선택 완료"
         android:layout_marginBottom="5dp"/>
+
 </LinearLayout>
