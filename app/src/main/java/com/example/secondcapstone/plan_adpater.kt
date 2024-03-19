@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 class plan_adpater(val itemList: ArrayList<plan_items>, private val listener: OnItemClickListener):
 
     RecyclerView.Adapter<plan_adpater.plan_Viewholder>() { //어댑터 상속
+
     interface OnItemClickListener {
         fun onItemClick(position: Int)
     }
@@ -20,22 +21,17 @@ class plan_adpater(val itemList: ArrayList<plan_items>, private val listener: On
         val day = itemView.findViewById<TextView>(R.id.day)
         val date = itemView.findViewById<TextView>(R.id.date)
         val addBtn = itemView.findViewById<Button>(R.id.add)
+
         init { // 클릭 이벤트를 init때 생성해야 함 이유는 모르겠다..
 
             addBtn.setOnClickListener {
                 val clickedPosition = adapterPosition
-//                Log.d("position", "clickedPosition is $clickedPosition")
-//                val clickedItem = itemList[clickedPosition]
-//
-//                val intent = Intent(itemView.context, travel_list::class.java)
-//                intent.putExtra("day", clickedItem.day)
-//                intent.putExtra("date", clickedItem.date)
-//                itemView.context.startActivity(intent)
-//                Log.d("position","day is ${clickedItem.day}")
                 listener.onItemClick(clickedPosition)
 
             }
+
         }
+
 
     }
 
@@ -54,7 +50,9 @@ class plan_adpater(val itemList: ArrayList<plan_items>, private val listener: On
         //return itemList.count() //itemList는 class의 매개변수로 줌
         holder.day.text = itemList[position].day
         holder.date.text = itemList[position].date
-        val button = Button(holder.itemView.context)
+        // TextView의 ID 동적 할당
+
+
 
     }
 
@@ -62,5 +60,6 @@ class plan_adpater(val itemList: ArrayList<plan_items>, private val listener: On
         return itemList.count()
 
     }
+
 
 }

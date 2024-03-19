@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.Gravity
 import android.widget.Button
 import android.widget.LinearLayout
+import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
@@ -19,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView.Recycler
 
 class plan_list : AppCompatActivity(), plan_adpater.OnItemClickListener {
     private val itemList = ArrayList<plan_items>() //data class로 리스트 선언)
+    private var addedList: ArrayList<String>? = null
     private lateinit var resultLauncher: ActivityResultLauncher<Intent>
 
 
@@ -26,6 +28,7 @@ class plan_list : AppCompatActivity(), plan_adpater.OnItemClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_plan_list)
         Log.d("position", "hi")
+
         resultLauncher = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()){ result ->
             Log.d("position", "resultLauncher is running")
@@ -33,13 +36,12 @@ class plan_list : AppCompatActivity(), plan_adpater.OnItemClickListener {
                 val addedList = result.data?.getStringArrayListExtra("addedList")
                 val a = result.data?.getStringExtra("a")
                 Log.d("position", "here is plan_list and list is $addedList")
-
                 Log.d("position", "a is $a")
+                makeTextView(addedList)
+                //addedList!!.clear()
             }
         }
 
-        val addedList = intent.getStringArrayListExtra("addedList")
-        Log.d("position", "here is plan_list. $addedList")
 
 
         val dateList = intent.getStringArrayListExtra("dateList") //Calendar -> autoGenerate -> 여기 순으로 데이터 받음
@@ -53,22 +55,36 @@ class plan_list : AppCompatActivity(), plan_adpater.OnItemClickListener {
 
         val recyclerView = findViewById<RecyclerView>(R.id.rcview)
 
-
-        dateList?.withIndex()?.forEach { (index, date) -> //dateList가 null이 아닌 경우에만 withIndex 함수 호출
+        Log.d("test0319","$dateList")
+        dateList?.withIndex()?.forEach { (index, date) -> //dateList에서 day와 date를 추출한 리스트를 생성함
+            //예를 들어서 dateList = [03-13, 03-14, 03-15] 이면
+            //itemList = [plan_items(day=1, date=03-13), plan_items(day=2, date=03-14), plan_items(day=3, date=03-15)]
+            //이 day와 date값은 recyclerView에서 사용됨
             val day = (index + 1).toString()
             val planItem = plan_items(day, date)
             itemList.add(planItem)
         }
 
-        Log.d("postion_planItem", "$itemList")
+        Log.d("test0319", "$itemList")
 
         val rc_adapter = plan_adpater(itemList, this) //어댑터 생성. 데이터 연결
-        //rc_adapter.notifyDataSetChanged()
         recyclerView.adapter = rc_adapter //recyclerView에 어댑터 연결
         recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-
+    }
+    override fun onItemClick(position: Int) {
+        Toast.makeText(this, "next",Toast.LENGTH_SHORT).show()
+        var intent = Intent(this, travel_list::class.java)
+        Log.d("position", "launched")
+        resultLauncher.launch(intent)
+    }
+    private fun makeTextView(addedList: java.util.ArrayList<String>?){
+        Log.d("position","makeTextView in plan_list")
+        // 새로운 TextView 생성
+        //addedList가 null이 아니고, 비어있지 않을 경우 실행
         // parent layout 밑에 새로운 LinearLayout 생성
-        val parentLayout = findViewById<LinearLayout>(R.id.parent)
+        val parentLayout = findViewById<LinearLayout>(R.id.parent_linear_detail)
+
+//        val parentLayout = findViewById<LinearLayout>(R.id.linear1)
 
         val newLinearLayout = LinearLayout(this)
         newLinearLayout.orientation = LinearLayout.VERTICAL
@@ -77,11 +93,10 @@ class plan_list : AppCompatActivity(), plan_adpater.OnItemClickListener {
             LinearLayout.LayoutParams.WRAP_CONTENT
         )
 
-        // 새로운 TextView 생성
-        //addedList가 null이 아니고, 비어있지 않을 경우 실행
-        if (addedList != null && addedList.isNotEmpty()) {
+        if (addedList != null && addedList!!.isNotEmpty()) {
+            Log.d("position","makeTextView in 81")
             // addedList의 값들로 TextView를 생성하고 LinearLayout에 추가
-            for (item in addedList) {
+            for (item in addedList!!) {
                 val newTextView = TextView(this)
                 newTextView.text = item // TextView의 text 속성을 리스트의 값으로 설정
 
@@ -123,15 +138,6 @@ class plan_list : AppCompatActivity(), plan_adpater.OnItemClickListener {
         }
         // LinearLayout을 부모 레이아웃에 추가
         parentLayout.addView(newLinearLayout)
-
-
-    }
-    override fun onItemClick(position: Int) {
-//        val selectedDestination = itemList[position].date
-//        Log.d("position","$selectedDestination in onItemClick")
-        Toast.makeText(this, "next",Toast.LENGTH_SHORT).show()
-        var intent = Intent(this, travel_list::class.java)
-        resultLauncher.launch(intent)
     }
 
 }

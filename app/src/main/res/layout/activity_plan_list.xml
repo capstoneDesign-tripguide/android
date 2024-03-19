@@ -8,6 +8,7 @@
     tools:context=".plan_list"
     android:orientation="vertical">
     <LinearLayout
+        android:id="@+id/linear1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -23,20 +24,45 @@
 
     </LinearLayout>
 
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rcview"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        tools:listitem="@layout/plan_list_layout" />
-    <LinearLayout
-        android:id="@+id/parent"
+    <ScrollView
+        android:id="@+id/parent_scroll_plan"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_weight="3"
         android:orientation="vertical">
 
-    </LinearLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rcview"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+
+            tools:listitem="@layout/plan_list_layout" />
+    </ScrollView>
+
+    <ScrollView
+        android:id="@+id/parent_scroll_detail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_weight="5">
+
+        <LinearLayout
+            android:id="@+id/parent_linear_detail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="50dp"
+            android:text="HELLO"/>
+
+
+        </LinearLayout>
+
+
+    </ScrollView>
+
     <Button
         android:id="@+id/next"
         android:layout_width="match_parent"

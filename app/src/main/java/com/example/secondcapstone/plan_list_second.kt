@@ -92,9 +92,7 @@ class plan_list_second : AppCompatActivity() {
 
                 button.setOnClickListener {
                     Toast.makeText(this,"$index", Toast.LENGTH_SHORT).show()
-                    Log.d("travel","1")
                     var intent = Intent(this, travel_list::class.java)
-                    Log.d("travel","2")
                     startActivity(intent)
                 }
             }
