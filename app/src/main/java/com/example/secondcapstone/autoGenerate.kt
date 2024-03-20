@@ -27,6 +27,7 @@ class autoGenerate : AppCompatActivity() {
             var intent = Intent(this, plan_list::class.java)
             intent.putStringArrayListExtra("dateList",ArrayList(dateList))
             startActivity(intent)
+            finish()
         }
         val tag = findViewById<EditText>(R.id.tag)
         var taglist = mutableListOf<String>() // var 리스트니까 mutableListOf로 선언

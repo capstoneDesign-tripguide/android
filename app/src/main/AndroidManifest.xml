@@ -16,6 +16,9 @@
         android:theme="@style/Theme.SecondCapstone"
         tools:targetApi="31">
         <activity
+            android:name=".disposable_0319"
+            android:exported="false" />
+        <activity
             android:name=".plan_list_second"
             android:exported="false" />
         <activity

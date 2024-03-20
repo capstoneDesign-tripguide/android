@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.ScrollView
@@ -27,25 +29,20 @@ class plan_list : AppCompatActivity(), plan_adpater.OnItemClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_plan_list)
-        Log.d("position", "hi")
 
         resultLauncher = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()){ result ->
-            Log.d("position", "resultLauncher is running")
             if (result.resultCode == RESULT_OK){
                 val addedList = result.data?.getStringArrayListExtra("addedList")
                 val a = result.data?.getStringExtra("a")
-                Log.d("position", "here is plan_list and list is $addedList")
+                Log.d("position", "here is plan_list and addedList is $addedList")
                 Log.d("position", "a is $a")
-                makeTextView(addedList)
-                //addedList!!.clear()
+                //travel_list에서 여행지 선택하고 왔으면 makeLinearLayout
+                makeLinearLayout(itemList, addedList)
             }
         }
 
-
-
         val dateList = intent.getStringArrayListExtra("dateList") //Calendar -> autoGenerate -> 여기 순으로 데이터 받음
-        Log.d("ThirdList", "$dateList")
 
         val next = findViewById<Button>(R.id.next)
         // 선택 완료 버튼 이벤트 처리. 추후 다음 액티비티로 이동하게 변경
@@ -55,17 +52,16 @@ class plan_list : AppCompatActivity(), plan_adpater.OnItemClickListener {
 
         val recyclerView = findViewById<RecyclerView>(R.id.rcview)
 
-        Log.d("test0319","$dateList")
         dateList?.withIndex()?.forEach { (index, date) -> //dateList에서 day와 date를 추출한 리스트를 생성함
             //예를 들어서 dateList = [03-13, 03-14, 03-15] 이면
             //itemList = [plan_items(day=1, date=03-13), plan_items(day=2, date=03-14), plan_items(day=3, date=03-15)]
-            //이 day와 date값은 recyclerView에서 사용됨
+            //이 day와 date값은 makeLinewarLayout()에서 사용됨
             val day = (index + 1).toString()
             val planItem = plan_items(day, date)
             itemList.add(planItem)
         }
 
-        Log.d("test0319", "$itemList")
+
 
         val rc_adapter = plan_adpater(itemList, this) //어댑터 생성. 데이터 연결
         recyclerView.adapter = rc_adapter //recyclerView에 어댑터 연결
@@ -77,14 +73,12 @@ class plan_list : AppCompatActivity(), plan_adpater.OnItemClickListener {
         Log.d("position", "launched")
         resultLauncher.launch(intent)
     }
-    private fun makeTextView(addedList: java.util.ArrayList<String>?){
-        Log.d("position","makeTextView in plan_list")
-        // 새로운 TextView 생성
-        //addedList가 null이 아니고, 비어있지 않을 경우 실행
-        // parent layout 밑에 새로운 LinearLayout 생성
-        val parentLayout = findViewById<LinearLayout>(R.id.parent_linear_detail)
 
-//        val parentLayout = findViewById<LinearLayout>(R.id.linear1)
+    //travel_list에서 선택해온 여행지를 추가함
+    private fun makeTextView(itemList: ArrayList<plan_items> , parentLayout: LinearLayout, addedList: ArrayList<String>?){
+        //itemList = [plan_items(day=1, date=03-14), plan_items(day=2, date=03-15), plan_items(day=3, date=03-16)]
+        Log.d("position","call makeTextView(). itemList is ${itemList}")
+        Log.d("position","call makeTextView(). addedList is ${addedList}")
 
         val newLinearLayout = LinearLayout(this)
         newLinearLayout.orientation = LinearLayout.VERTICAL
@@ -92,9 +86,9 @@ class plan_list : AppCompatActivity(), plan_adpater.OnItemClickListener {
             LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.WRAP_CONTENT
         )
-
+        Log.d("position", "makeTextView outside if")
         if (addedList != null && addedList!!.isNotEmpty()) {
-            Log.d("position","makeTextView in 81")
+            Log.d("position","makeTextView in if")
             // addedList의 값들로 TextView를 생성하고 LinearLayout에 추가
             for (item in addedList!!) {
                 val newTextView = TextView(this)
@@ -136,8 +130,67 @@ class plan_list : AppCompatActivity(), plan_adpater.OnItemClickListener {
                 newLinearLayout.addView(deleteButton)
             }
         }
-        // LinearLayout을 부모 레이아웃에 추가
+        // LinearLayout을 부  모 레이아웃에 추가
         parentLayout.addView(newLinearLayout)
     }
 
+    //캘린더에서 설정한 일수만큼 밑에 뷰를 생성해 준다.
+    private fun makeLinearLayout(itemList: ArrayList<plan_items>, addedList: ArrayList<String>?){
+        //itemList는 이런식으로 생김
+        //itemList = [plan_items(day=1, date=03-13), plan_items(day=2, date=03-14), plan_items(day=3, date=03-15)]
+        Log.d("position", "call makeLinearLayout")
+        val parentLayout = findViewById<LinearLayout>(R.id.parent_linear_detail)
+        var newLinearLayoutIds = ArrayList<String>()
+
+        itemList?.forEach { item ->
+            val itemNameTextView = TextView(this)
+            val newLinearLayout = LinearLayout(this)
+            newLinearLayout.orientation = LinearLayout.HORIZONTAL
+
+            val id = View.generateViewId()
+            newLinearLayout.id = id
+            newLinearLayoutIds.add(id.toString())
+
+            itemNameTextView.text = "Day"
+            itemNameTextView.textSize = 25f //25dp
+            itemNameTextView.setTextColor(resources.getColor(R.color.black))
+
+            val dayTextView = TextView(this)
+            dayTextView.text = item.day
+            dayTextView.textSize = 15f //15dp
+            dayTextView.setTextColor(resources.getColor(R.color.black))
+
+            val dateTextView = TextView(this)
+            dateTextView.text = item.date
+            dateTextView    .textSize = 25f //25dp
+            dateTextView.setTextColor(resources.getColor(R.color.black))
+
+            val planTextView = TextView(this)
+            planTextView.text = "일정"
+            planTextView.textSize = 25f
+            planTextView.setTextColor(resources.getColor(R.color.black))
+
+            if (newLinearLayout.parent != null) {
+                (newLinearLayout.parent as ViewGroup).removeView(newLinearLayout)
+
+            }
+            newLinearLayout.addView(itemNameTextView)
+            newLinearLayout.addView(dayTextView)
+            newLinearLayout.addView(dateTextView)
+            newLinearLayout.addView(planTextView)
+            parentLayout.addView(newLinearLayout)
+        }
+
+        for (i in 0 until newLinearLayoutIds.size) {
+            val parentLayout = resources.getIdentifier(newLinearLayoutIds[i], "id", packageName)
+            val newLinearLayout = findViewById<LinearLayout>(parentLayout)
+            newLinearLayout.setOnClickListener {
+                Toast.makeText(this, i.toString(), Toast.LENGTH_SHORT).show()
+                makeTextView(itemList, newLinearLayout, addedList)
+            }
+        }
+
+    }
 }
+
+
