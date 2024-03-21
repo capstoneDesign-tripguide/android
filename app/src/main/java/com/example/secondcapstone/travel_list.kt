@@ -20,6 +20,7 @@ import kotlinx.coroutines.delay
 class travel_list : AppCompatActivity(), travel_adapter.OnItemClickListener {
     private val itemList = ArrayList<travel_items>()
     private val addedList = ArrayList<String>()
+    private var position = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_travel_list)
@@ -46,10 +47,12 @@ class travel_list : AppCompatActivity(), travel_adapter.OnItemClickListener {
         recyclerView.adapter = rc_adapter //recyclerView에 어댑터 연결
         recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
 
+        position = intent.getIntExtra("position", 0)
         val nextBtn = findViewById<Button>(R.id.next)
         nextBtn.setOnClickListener {
             returnDataToPreviousActivity() //add
         }
+
     }
 
     override fun onItemClick(position: Int) {
@@ -63,6 +66,8 @@ class travel_list : AppCompatActivity(), travel_adapter.OnItemClickListener {
         Log.d("position","list is composed of $addedList")
         intent.putStringArrayListExtra("addedList", addedList)
         intent.putExtra("a","b")
+        Log.d("test0321", "position is $position in travel_list")
+        intent.putExtra("position", position)
         setResult(RESULT_OK, intent) // 이전 액티비티로 결과 전달
         finish() // 현재 액티비티 종료
     }

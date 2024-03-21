@@ -1,5 +1,7 @@
 //지금 고쳐야 할 문제
 //1. travel_list에서 가져온 여행지가 VERTICAL이 아닌 HORIZONAL로 생성됨
+//2. 삭제 버튼 에러(안 지워지거나, 한 번에 다 지워짐)
+//3. 일정을 클릭해야 여행지가 추가됨 -> launcher에서 수행하도록 변경하자 -> 해결
 package com.example.secondcapstone
 
 import android.content.Intent
@@ -36,17 +38,25 @@ class plan_list : AppCompatActivity(), plan_adpater.OnItemClickListener {
         resultLauncher = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()){ result ->
             if (result.resultCode == RESULT_OK){
+                //intent가 아니라 result.data?에서 값을 읽어와야 함
                 val addedList = result.data?.getStringArrayListExtra("addedList")
+                val position = result.data?.getIntExtra("position", 1000)
+                Log.d("test0321", "position is $position in plan_list")
                 val a = result.data?.getStringExtra("a")
-                Log.d("position", "here is plan_list and addedList is $addedList")
-                Log.d("position", "a is $a")
-                for (i in 0 until newLinearLayoutIds.size) {
-                    val parentLayout = resources.getIdentifier(newLinearLayoutIds[i], "id", packageName)
-                    Log.d("test0321", "addedList is $addedList in launcher")
-                    makeSetOnClickListener(parentLayout, i, addedList)
+                Log.d("test0321", "here is plan_list and addedList is $addedList")
+                Log.d("test0321", "a is $a")
+
+                //일정마다 클릭 이벤트 추가
+//                for (i in 0 until newLinearLayoutIds.size) {
+//
+//                    val parentLayout = resources.getIdentifier(newLinearLayoutIds[i], "id", packageName)
+//                    makeTravelList(parentLayout, i, addedList)
+//                }
+                if (position != null) {
+                    val parentLayout = resources.getIdentifier(newLinearLayoutIds[position], "id", packageName)
+                    makeTravelList(parentLayout, addedList)
                 }
-                //travel_list에서 여행지 선택하고 왔으면 makeLinearLayout
-//                makeLinearLayout(itemList, addedList)
+
             }
         }
 
@@ -75,10 +85,14 @@ class plan_list : AppCompatActivity(), plan_adpater.OnItemClickListener {
         makeLinearLayout(itemList)
         Log.d("test0321", "$newLinearLayoutIds")
     }
+
+    //recyclerView의 버튼 클릭 이벤트
     override fun onItemClick(position: Int) {
+        Log.d("test0321","$position is clicked")
         Toast.makeText(this, "next",Toast.LENGTH_SHORT).show()
         var intent = Intent(this, travel_list::class.java)
         Log.d("position", "launched")
+        intent.putExtra("position", position)
         resultLauncher.launch(intent)
     }
 
@@ -89,12 +103,13 @@ class plan_list : AppCompatActivity(), plan_adpater.OnItemClickListener {
         Log.d("position","call makeTextView(). addedList is ${addedList}")
 
         val newLinearLayout = LinearLayout(this)
-        newLinearLayout.orientation = LinearLayout.VERTICAL
+        newLinearLayout.orientation = LinearLayout.HORIZONTAL
         newLinearLayout.layoutParams = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.WRAP_CONTENT
         )
         Log.d("position", "makeTextView outside if")
+
         if (addedList != null && addedList!!.isNotEmpty()) {
             Log.d("position","makeTextView in if")
             // addedList의 값들로 TextView를 생성하고 LinearLayout에 추가
@@ -107,6 +122,7 @@ class plan_list : AppCompatActivity(), plan_adpater.OnItemClickListener {
                     LinearLayout.LayoutParams.WRAP_CONTENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT
                 )
+
                 layoutParams.leftMargin = 20
                 layoutParams.weight = 1F
 
@@ -118,6 +134,7 @@ class plan_list : AppCompatActivity(), plan_adpater.OnItemClickListener {
                 // 삭제 버튼 생성
                 val deleteButton = TextView(this)
                 deleteButton.text = "x"
+
                 val deleteButtonLayoutParams = LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT
@@ -191,13 +208,12 @@ class plan_list : AppCompatActivity(), plan_adpater.OnItemClickListener {
 
 
     }
-    private fun makeSetOnClickListener(parentLayout: Int, i: Int, addedList: ArrayList<String>?){
+
+    private fun makeTravelList(parentLayout: Int, addedList: ArrayList<String>?){
         val newLinearLayout = findViewById<LinearLayout>(parentLayout)
-        newLinearLayout.setOnClickListener {
 //            Toast.makeText(this, i.toString(), Toast.LENGTH_SHORT).show()
-            Log.d("test0321", "addedList is $addedList in makeSetOnClick")
+//            Log.d("test0321", "addedList is $addedList in makeSetOnClick")
             makeTextView(itemList, newLinearLayout, addedList)
-        }
     }
 
 }

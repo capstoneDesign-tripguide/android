@@ -23,11 +23,9 @@ class plan_adpater(val itemList: ArrayList<plan_items>, private val listener: On
         val addBtn = itemView.findViewById<Button>(R.id.add)
 
         init { // 클릭 이벤트를 init때 생성해야 함 이유는 모르겠다..
-
-            addBtn.setOnClickListener {
+            addBtn.setOnClickListener { //선택 완료 버튼 클릭 이벤트 처리
                 val clickedPosition = adapterPosition
                 listener.onItemClick(clickedPosition)
-
             }
 
         }
