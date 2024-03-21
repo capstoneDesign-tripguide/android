@@ -1,9 +1,5 @@
 //지금 고쳐야 할 문제
-//1. travel_list에서 여행지를 가져와야 일정 목록이 생김
-//2. 일정을 터치해야 여행지가 생성됨. -> setOnClickListener에 있는 동작을 resultLauncher에 실행하게 해야 할 듯..?
-//3. travel_list에서 가져온 여행지가 VERTICAL이 아닌 HORIZONAL로 생성됨
-// -> 음 아마 전에도 이랬던 경험이 있었는데 parent를 VERTICAL로 설정하고, 레이아웃 생성 코드 위치를 잘 바꿨더니 해결했었음 이번에도 비슷하지 않을까
-//1번, 2번은 makeLinearLayout()의 기능을 분리해서 하나는 1, 다른 하나는 2를 해결할 수 있을 듯 싶음
+//1. travel_list에서 가져온 여행지가 VERTICAL이 아닌 HORIZONAL로 생성됨
 package com.example.secondcapstone
 
 import android.content.Intent
@@ -30,6 +26,7 @@ class plan_list : AppCompatActivity(), plan_adpater.OnItemClickListener {
     private val itemList = ArrayList<plan_items>() //data class로 리스트 선언)
     private var addedList: ArrayList<String>? = null
     private lateinit var resultLauncher: ActivityResultLauncher<Intent>
+    private var newLinearLayoutIds = ArrayList<String>() // 전역 변수로 선언
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,8 +40,13 @@ class plan_list : AppCompatActivity(), plan_adpater.OnItemClickListener {
                 val a = result.data?.getStringExtra("a")
                 Log.d("position", "here is plan_list and addedList is $addedList")
                 Log.d("position", "a is $a")
+                for (i in 0 until newLinearLayoutIds.size) {
+                    val parentLayout = resources.getIdentifier(newLinearLayoutIds[i], "id", packageName)
+                    Log.d("test0321", "addedList is $addedList in launcher")
+                    makeSetOnClickListener(parentLayout, i, addedList)
+                }
                 //travel_list에서 여행지 선택하고 왔으면 makeLinearLayout
-                makeLinearLayout(itemList, addedList)
+//                makeLinearLayout(itemList, addedList)
             }
         }
 
@@ -70,6 +72,8 @@ class plan_list : AppCompatActivity(), plan_adpater.OnItemClickListener {
         val rc_adapter = plan_adpater(itemList, this) //어댑터 생성. 데이터 연결
         recyclerView.adapter = rc_adapter //recyclerView에 어댑터 연결
         recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        makeLinearLayout(itemList)
+        Log.d("test0321", "$newLinearLayoutIds")
     }
     override fun onItemClick(position: Int) {
         Toast.makeText(this, "next",Toast.LENGTH_SHORT).show()
@@ -136,15 +140,15 @@ class plan_list : AppCompatActivity(), plan_adpater.OnItemClickListener {
         }
         // LinearLayout을 부모 레이아웃에 추가
         parentLayout.addView(newLinearLayout)
+
     }
 
     //캘린더에서 설정한 일수만큼 밑에 뷰를 생성해 준다.
-    private fun makeLinearLayout(itemList: ArrayList<plan_items>, addedList: ArrayList<String>?){
+    private fun makeLinearLayout(itemList: ArrayList<plan_items>){
         //itemList는 이런식으로 생김
         //itemList = [plan_items(day=1, date=03-13), plan_items(day=2, date=03-14), plan_items(day=3, date=03-15)]
         Log.d("position", "call makeLinearLayout")
         val parentLayout = findViewById<LinearLayout>(R.id.parent_linear_detail)
-        var newLinearLayoutIds = ArrayList<String>()
 
         itemList?.forEach { item ->
             val itemNameTextView = TextView(this)
@@ -166,7 +170,7 @@ class plan_list : AppCompatActivity(), plan_adpater.OnItemClickListener {
 
             val dateTextView = TextView(this)
             dateTextView.text = item.date
-            dateTextView    .textSize = 25f //25dp
+            dateTextView.textSize = 25f //25dp
             dateTextView.setTextColor(resources.getColor(R.color.black))
 
             val planTextView = TextView(this)
@@ -185,22 +189,13 @@ class plan_list : AppCompatActivity(), plan_adpater.OnItemClickListener {
             parentLayout.addView(newLinearLayout)
         }
 
-        for (i in 0 until newLinearLayoutIds.size) {
-            val parentLayout = resources.getIdentifier(newLinearLayoutIds[i], "id", packageName)
-            val newLinearLayout = findViewById<LinearLayout>(parentLayout)
-            Log.d("position", "In makeLinearLayout, addedList is $addedList")
-            makeSetOnClickListener(newLinearLayout, i, addedList)
-//            newLinearLayout.setOnClickListener {
-//                Toast.makeText(this, i.toString(), Toast.LENGTH_SHORT).show()
-//                makeTextView(itemList, newLinearLayout, addedList)
-//            }
-        }
+
     }
-    private fun makeSetOnClickListener(newLinearLayout: LinearLayout, i: Int, addedList: ArrayList<String>?){
+    private fun makeSetOnClickListener(parentLayout: Int, i: Int, addedList: ArrayList<String>?){
+        val newLinearLayout = findViewById<LinearLayout>(parentLayout)
         newLinearLayout.setOnClickListener {
-            Log.d("position", "$i call maekSetOnClickListener")
-            Toast.makeText(this, i.toString(), Toast.LENGTH_SHORT).show()
-            Log.d("position", "$addedList")
+//            Toast.makeText(this, i.toString(), Toast.LENGTH_SHORT).show()
+            Log.d("test0321", "addedList is $addedList in makeSetOnClick")
             makeTextView(itemList, newLinearLayout, addedList)
         }
     }
