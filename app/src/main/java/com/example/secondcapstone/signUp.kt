@@ -1,6 +1,7 @@
 package com.example.secondcapstone
 
 import android.app.DatePickerDialog
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -34,15 +35,47 @@ class signUp : AppCompatActivity() {
         val SIGNUP = findViewById<Button>(R.id.SIGNUP) //회원가입 버튼
         val alarm = findViewById<TextView>(R.id.alarm) //문구
 
-        val testBtn = findViewById<Button>(R.id.testbtn)
-        val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
+        //네비게이션 요소들
+        val navBtn = findViewById<Button>(R.id.testbtn)
+        val nav_close_btn = findViewById<Button>(R.id.close_nav_btn)
+        val drawerLayout = findViewById<DrawerLayout>(R.id.drawer_layout)
+        val navLayout = findViewById<com.google.android.material.navigation.NavigationView>(R.id.navigation_view)
+        val edit_user_btn = findViewById<Button>(R.id.btn_edituser)
 
-        testBtn.setOnClickListener { //드로어 레이아웃
+
+        navBtn.setOnClickListener { //드로어 레이아웃
             if (drawerLayout.isDrawerOpen(GravityCompat.END)) {
                 drawerLayout.closeDrawer(GravityCompat.END)
             } else {
                 drawerLayout.openDrawer(GravityCompat.END)
             }
+        }
+
+        nav_close_btn.setOnClickListener {
+            drawerLayout.closeDrawer(GravityCompat.END)
+        }
+
+        edit_user_btn.setOnClickListener {
+            var intent = Intent(this, edit_user::class.java)
+            startActivity(intent)
+        }
+
+
+
+        supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+            setHomeAsUpIndicator(R.drawable.google_login)
+        }
+
+
+
+        //로그인 버튼 클릭 시 액티비티 전환
+        val loginBtn = findViewById<TextView>(R.id.loginBtn)
+        loginBtn.setOnClickListener {
+            Log.d("test0121", "setOnClickLoginBtn")
+            var intent = Intent(this, loginActivity::class.java)
+            intent.putExtra("data", "1") //data라는 변수에 value를 put. 넣었으니 loginActivity.kt에서 받아야 함(get)
+            startActivity(intent)
         }
 
 

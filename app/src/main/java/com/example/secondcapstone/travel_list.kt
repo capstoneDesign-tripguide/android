@@ -12,6 +12,7 @@ import android.view.Gravity
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -58,7 +59,14 @@ class travel_list : AppCompatActivity(), travel_adapter.OnItemClickListener {
     override fun onItemClick(position: Int) {
         //추가 버튼 클릭 시 선택한 여행지 이름을 addedList에 추가
         val selectedDestination = itemList[position].name
-        addedList.add(selectedDestination)
+
+        //이미 존재하는 여행지인 경우
+        if (selectedDestination in addedList.orEmpty()) {
+            Toast.makeText(this, "이미 선택된 목적지입니다.", Toast.LENGTH_SHORT).show()
+        } else {
+            // selectedDestination이 addedList 안에 없으면
+            addedList?.add(selectedDestination)
+        }
         Log.d("position","here is travel_list and destination is $selectedDestination")
 
     }
