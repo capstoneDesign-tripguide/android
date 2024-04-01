@@ -89,7 +89,7 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
+ㅅ
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
@@ -99,6 +99,9 @@
                     android:scheme="kakaof6f9d03046eb1871025498f5b6d37780" />
             </intent-filter>
         </activity>
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyByXRkTKRM3O8P1Sq7fbI4I60UMVdovReg" />
     </application>
 
 </manifest>

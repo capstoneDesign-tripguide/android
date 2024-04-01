@@ -87,4 +87,7 @@ dependencies {
 
     implementation("androidx.drawerlayout:drawerlayout:1.1.1") //드로어 레이아웃
 
+    implementation("com.google.android.gms:play-services-maps:17.0.0") //구글맵
+    implementation("com.google.android.gms:play-services-location:17.0.0") //구글맵2
+
 }
