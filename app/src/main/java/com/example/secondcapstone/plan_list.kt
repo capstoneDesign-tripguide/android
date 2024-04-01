@@ -27,6 +27,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Recycler
+import java.io.Serializable
 
 class plan_list : AppCompatActivity(), plan_adpater.OnItemClickListener {
     private val itemList = ArrayList<plan_items>() //data class로 리스트 선언)
@@ -115,11 +116,14 @@ class plan_list : AppCompatActivity(), plan_adpater.OnItemClickListener {
         val next = findViewById<Button>(R.id.next)
         // 선택 완료 버튼 이벤트 처리. 추후 다음 액티비티로 이동하게 변경
         next.setOnClickListener {
-            if (finalTravelList.size == itemList.size){
-                Toast.makeText(this, "next",Toast.LENGTH_SHORT).show()
-                Log.d("next", "$finalTravelList")
+            if (finalTravelList.size == itemList.size){ //모든 날짜의 일정을 채움
+                var intent = Intent(this, edit_plan_list::class.java)
+                intent.putExtra("finalTravelList","$finalTravelList")
+                intent.putExtra("listKey", finalTravelList as Serializable)
+                Log.d("0329","in plan, $finalTravelList")
+                startActivity(intent)
             }
-            else {
+            else { //일정이 없는 날짜가 있음
                 Toast.makeText(this, "모든 날짜의 일정을 만들어주세요.",Toast.LENGTH_SHORT).show()
             }
         }
@@ -145,7 +149,7 @@ class plan_list : AppCompatActivity(), plan_adpater.OnItemClickListener {
     //recyclerView의 버튼 클릭 이벤트. travel_list로 이동
     override fun onItemClick(position: Int) {
         Log.d("test0321","$position is clicked")
-        Toast.makeText(this, "next",Toast.LENGTH_SHORT).show()
+//        Toast.makeText(this, "next",Toast.LENGTH_SHORT).show()
         var intent = Intent(this, travel_list::class.java)
         Log.d("position", "launched")
         intent.putExtra("position", position)
