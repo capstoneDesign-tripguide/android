@@ -22,6 +22,8 @@ import com.example.secondcapstone.databinding.LoginActivityBinding
 import com.kakao.sdk.common.KakaoSdk
 import com.kakao.sdk.common.util.Utility
 import com.navercorp.nid.NaverIdLoginSDK
+import java.io.File
+import java.io.InputStream
 
 
 class MainActivity : AppCompatActivity() {

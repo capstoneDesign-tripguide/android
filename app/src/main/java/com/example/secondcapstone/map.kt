@@ -1,15 +1,24 @@
 package com.example.secondcapstone
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.example.secondcapstone.databinding.ActivityMapBinding
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import org.json.JSONArray
+import java.io.File
+import java.io.InputStream
+data class Location(val latitude: Double, val longitude: Double)
+data class DisplayName(val text: String, val languageCode: String)
+data class Place(val id: String, val location: Location, val rating: Double, val displayName: DisplayName)
 
 internal class map : AppCompatActivity(), OnMapReadyCallback {
-
+    private lateinit var places: List<Place>
     companion object {
         const val TAG = "MapActivity"
     }
@@ -27,6 +36,19 @@ internal class map : AppCompatActivity(), OnMapReadyCallback {
         binding = ActivityMapBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        //        val pt_jsonString = File("C:\Users\yeoyeoungkyu\Desktop\secondCapstone\app\src\main\res\raw\sample.json").readText()
+        /*        res/raw 디렉토리의 파일은 앱의 리소스로 패키지화되어 디바이스에 설치될 때
+                  압축되어 저장되므로 File 모듈로 읽어올 수 없다고 한다
+                  따라서 밑과 같이 inputStream을 이용해야 함 (자바와 안드로이드에서 데이터를 바이트 단위로 읽어오는 데 사용되는 클래스)
+        */
+        val inputStream: InputStream = resources.openRawResource(R.raw.sample)
+        val jsonString = inputStream.bufferedReader().use { it.readText() }
+        Log.d("json", "$jsonString")
+
+        val listType = object : TypeToken<List<Place>>() {}.type
+        places = Gson().fromJson(jsonString, listType) //jsonString을 리스트로 바꿈. onMapReady()에서 마커 추가하는데 사용
+
+
         this.mapView = binding.mapView
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync(this@map)
@@ -43,8 +65,17 @@ internal class map : AppCompatActivity(), OnMapReadyCallback {
         this.googleMap = googleMap
 
         //LatLngEntity는 dataclass 이름. 하단에 있음
-        currentMarker = setupMarker(LatLngEntity(37.5562,126.9724))  // default 서울역
-        currentMarker?.showInfoWindow()
+//        currentMarker = setupMarker(LatLngEntity(37.5562,126.9724))  // default 서울역
+
+        // 변환된 객체 리스트를 반복하며 작업 수행
+        for (place in places) {
+            // 각 place에 대한 작업을 수행하세요.
+
+            currentMarker = setupMarker(LatLngEntity(place.location.latitude, place.location.longitude), place.displayName.text)
+            Log.d("json", "latitud: ${place.location.latitude}, langitude: ${place.location.longitude}")
+            currentMarker?.showInfoWindow()
+        }
+
     }
 
 
@@ -54,12 +85,12 @@ internal class map : AppCompatActivity(), OnMapReadyCallback {
      * @param locationLatLngEntity
      * @return
      */
-    private fun setupMarker(locationLatLngEntity: LatLngEntity): Marker? { //LatLngEntity 자료형의 locationLatLngEntity 매개변수. Marker?를 상속받음
+    private fun setupMarker(locationLatLngEntity: LatLngEntity, displayName: String): Marker? { //LatLngEntity 자료형의 locationLatLngEntity 매개변수. Marker?를 상속받음
 
         val positionLatLng = LatLng(locationLatLngEntity.latitude!!,locationLatLngEntity.longitude!!)
         val markerOption = MarkerOptions().apply {
             position(positionLatLng)
-            title("위치")
+            title(displayName)
             snippet("서울역 위치") //subtitle 느낌
         }
 
@@ -108,59 +139,3 @@ internal class map : AppCompatActivity(), OnMapReadyCallback {
         var longitude: Double?
     )
 }
-
-/** 공식 문서 예제 코드
-package com.example.secondcapstone
-
-import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.MarkerOptions
-
-
-class map : AppCompatActivity(){
-
-private val places: List<Place> by lazy {
-PlacesReader(this).read()
-}
-override fun onCreate(savedInstanceState: Bundle?) {
-super.onCreate(savedInstanceState)
-
-setContentView(R.layout.activity_map)
-
-val mapFragment = supportFragmentManager.findFragmentById(
-R.id.map_fragment
-) as? SupportMapFragment
-mapFragment?.getMapAsync { googleMap ->
-addMarkers( googleMap)
-}
-}
-private fun addMarkers(googleMap: GoogleMap) {
-places.forEach { place ->
-val marker = googleMap.addMarker(
-MarkerOptions()
-.title(place.name)
-.position(place.latLng)
-)
-}
-}
-}
- */
-
-/**
-<?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".MainActivity">
-
-    <fragment
-        class="com.google.android.gms.maps.SupportMapFragment"
-        android:id="@+id/map_fragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-</FrameLayout>
- **/

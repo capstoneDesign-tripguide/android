@@ -1,0 +1,17 @@
+[
+  {"id": "ChIJw8UIcGCifDURB0MtY-xAUqM",
+    "location": {"latitude": 37.557839099999995, "longitude": 126.9697808},
+    "rating": 4.1,
+    "displayName": {"text": "Seoullo 7017", "languageCode": "en"}
+  },
+  {"id": "sample1_id",
+    "location": {"latitude": 37.558839099999995, "longitude": 126.9707808},
+    "rating": 4.2,
+    "displayName": {"text": "sample1", "languageCode": "en"}
+  },
+  {"id": "sample2_id",
+  "location": {"latitude": 37.556839099999995, "longitude": 126.9687808},
+  "rating": 4.3,
+  "displayName": {"text": "sample2", "languageCode": "en"}
+  }
+]
