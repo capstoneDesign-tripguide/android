@@ -1,7 +1,15 @@
 package com.example.secondcapstone
 
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.Window
+import android.widget.Button
+import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.secondcapstone.databinding.ActivityMapBinding
 import com.google.android.gms.maps.*
@@ -17,7 +25,7 @@ data class Location(val latitude: Double, val longitude: Double)
 data class DisplayName(val text: String, val languageCode: String)
 data class Place(val id: String, val location: Location, val rating: Double, val displayName: DisplayName)
 
-internal class map : AppCompatActivity(), OnMapReadyCallback {
+internal class map : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     private lateinit var places: List<Place>
     companion object {
         const val TAG = "MapActivity"
@@ -55,12 +63,6 @@ internal class map : AppCompatActivity(), OnMapReadyCallback {
 
     }
 
-
-    /**
-     * onMapReady()
-     * Map 이 사용할 준비가 되었을 때 호출
-     * @param googleMap
-     */
     override fun onMapReady(googleMap: GoogleMap) {
         this.googleMap = googleMap
 
@@ -75,16 +77,10 @@ internal class map : AppCompatActivity(), OnMapReadyCallback {
             Log.d("json", "latitud: ${place.location.latitude}, langitude: ${place.location.longitude}")
             currentMarker?.showInfoWindow()
         }
-
+        googleMap.setOnMarkerClickListener(this) // 마커 클릭 리스너 설정
     }
 
 
-    /**
-     * setupMarker()
-     * 선택한 위치의 marker 표시
-     * @param locationLatLngEntity
-     * @return
-     */
     private fun setupMarker(locationLatLngEntity: LatLngEntity, displayName: String): Marker? { //LatLngEntity 자료형의 locationLatLngEntity 매개변수. Marker?를 상속받음
 
         val positionLatLng = LatLng(locationLatLngEntity.latitude!!,locationLatLngEntity.longitude!!)
@@ -100,7 +96,69 @@ internal class map : AppCompatActivity(), OnMapReadyCallback {
         return googleMap.addMarker(markerOption)
 
     }
+    override fun onMarkerClick(marker: Marker): Boolean {
+        Log.d("marker", "clicked.")
 
+        val place = findPlaceByMarker(marker)
+        if (place != null) {
+            val message = "이름: ${place.displayName.text}\n별점: ${place.rating}"
+            showAlertDialog(place.displayName.text, place.rating)
+        }
+        return false
+        /*
+        false 리턴 -> 이벤트를 소비하지 않았다고 리턴함
+        이벤트를 소비했다면 추가적인 이벤트 처리가 이루어지지 않는다고 함
+        true 리턴하면 마커 클릭 시 title이랑 snippet 사라짐
+        */
+    }
+
+    private fun showAlertDialog(displayName: String, rating: Double) {
+        val layoutInflater = LayoutInflater.from(this)
+        val view = layoutInflater.inflate(R.layout.marker_detail, null)
+
+        //alertDialog 생성
+        val alertDialog = AlertDialog.Builder(this)
+            .setView(view)
+            .create()
+        //이 두 코드 없으면 background 설정해도, 그 밖으로 테두리 각지게 튀어나옴
+        alertDialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        alertDialog?.window?.requestFeature(Window.FEATURE_NO_TITLE)
+
+        val title_textView = view.findViewById<TextView>(R.id.title)
+        title_textView.text = displayName
+
+        val rating_textView = view.findViewById<TextView>(R.id.rating)
+        rating_textView.text = rating.toString()
+
+        val confirm_btn = view.findViewById<Button>(R.id.confirm)
+        confirm_btn.setOnClickListener {
+            alertDialog.dismiss()
+        }
+
+        alertDialog.show()
+
+//        val alertDialogBuilder = AlertDialog.Builder(this)
+//        alertDialogBuilder
+//            .setTitle("여행지 정보")
+//            .setMessage(message)
+//            .setPositiveButton("확인") { dialog, _ -> dialog.dismiss() }
+//            .create()
+//            .show()
+    }
+    private fun findPlaceByMarker(marker: Marker): Place? {
+        // 마커와 연결된 place를 찾는 함수
+        for (place in places) {
+            if (marker.position.latitude == place.location.latitude && marker.position.longitude == place.location.longitude) {
+                return place
+            }
+        }
+        return null
+    }
+
+    data class LatLngEntity(
+        var latitude: Double?,
+        var longitude: Double?
+    )
 
     override fun onStart() {
         super.onStart()
@@ -128,14 +186,5 @@ internal class map : AppCompatActivity(), OnMapReadyCallback {
     }
 
 
-    /**
-     * LatLngEntity data class
-     *
-     * @property latitude 위도 (ex. 37.5562)
-     * @property longitude 경도 (ex. 126.9724)
-     */
-    data class LatLngEntity(
-        var latitude: Double?,
-        var longitude: Double?
-    )
 }
+
