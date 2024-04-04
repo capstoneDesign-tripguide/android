@@ -195,7 +195,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:gravity="center"
-                android:layout_marginLeft="80dp">
+                android:layout_weight="1">
 
                 <Button
                     android:id="@+id/naverLoginBtn"
@@ -212,14 +212,35 @@
                     android:layout_marginTop="5dp"
                     android:fontFamily="@font/jua_ttf"/>
             </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_weight="1">
 
+                <Button
+                    android:id="@+id/kakaoLoginBtn"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/kakao_login" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Kakao"
+                    android:textSize="12sp"
+                    android:textColor="#000000"
+                    android:layout_marginTop="5dp"
+                    android:fontFamily="@font/jua_ttf"/>
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:gravity="center"
-                android:layout_marginLeft="100dp">
+                android:layout_weight="1">
                 <Button
                     android:id="@+id/googleLoginBtn"
                     android:layout_width="50dp"
@@ -237,10 +258,10 @@
                     android:fontFamily="@font/jua_ttf"/>
             </LinearLayout>
         </LinearLayout>
-<!--        <com.navercorp.nid.oauth.view.NidOAuthLoginButton-->
-<!--            android:id="@+id/buttonOAuthLoginImg"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="50dp" />-->
+        <com.navercorp.nid.oauth.view.NidOAuthLoginButton
+            android:id="@+id/buttonOAuthLoginImg"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp" />
     </LinearLayout>
 
     <!--    Navigation contents-->
