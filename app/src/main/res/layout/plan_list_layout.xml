@@ -60,7 +60,8 @@
                 android:fontFamily="@font/jua_ttf"
                 android:background="@drawable/btn_repple_ex"
                 android:layout_weight="1"
-                android:textSize="15dp"
+                android:textSize="17dp"
+                android:textColor="#ffffff"
                 android:text="장소 편집" />
         </LinearLayout>
 

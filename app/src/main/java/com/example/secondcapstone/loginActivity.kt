@@ -96,6 +96,7 @@ class loginActivity : AppCompatActivity() {
                 }
                 else if (token != null) {
                     Log.i("test", "kakao login successed ${token.accessToken}")
+                    
                 }
             }
         }

@@ -44,8 +44,9 @@
         android:layout_height="wrap_content"
         android:background="@drawable/btn_repple_ex"
         android:fontFamily="@font/jua_ttf"
-        android:textSize="20dp"
+        android:textSize="17dp"
         android:text="선택 완료"
+        android:textColor="#ffffff"
         android:layout_marginBottom="5dp"/>
 
 

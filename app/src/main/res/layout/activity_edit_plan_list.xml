@@ -37,20 +37,28 @@ android:orientation="vertical">
             <LinearLayout
                 android:id="@+id/linearLayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
                 android:orientation="vertical">
+
             </LinearLayout>
 
+
             <Button
-                android:id="@+id/go_to_map"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/btn_repple_ex"
-                android:fontFamily="@font/jua_ttf"
-                android:textSize="20dp"
-                android:text="지도 확인하기"
-                android:layout_marginBottom="5dp"
-                android:layout_marginTop="20dp"/>
+                    android:id="@+id/go_to_map"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/btn_repple_ex"
+                    android:fontFamily="@font/jua_ttf"
+                    android:textSize="17dp"
+                    android:text="지도 확인하기"
+                    android:textColor="#ffffff"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="20dp"/>
+
+
+
+
 
 
         </LinearLayout>

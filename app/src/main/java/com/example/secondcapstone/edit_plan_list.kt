@@ -15,6 +15,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import java.io.Serializable
 
 class edit_plan_list : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,18 +47,21 @@ class edit_plan_list : AppCompatActivity() {
             var intent = Intent(this, edit_user::class.java)
             startActivity(intent)
         }
-        //------------------네비게이션 요소들------------------
+        //------------------까지 네비게이션 요소들------------------
+        val finalTravelList =
+            intent.getSerializableExtra("listKey") as? ArrayList<ArrayList<String>?> //serializable을 ArrayList로 받음
+        Log.d("in edit", "in edit, finalTravelList is $finalTravelList")
+        Log.d("in edit", "in edit, index[0] is ${finalTravelList!![0]}")
+
 
         val go_to_map_button = findViewById<Button>(R.id.go_to_map)
         go_to_map_button.setOnClickListener {
             var intent = Intent(this, map::class.java)
+            intent.putExtra("listKey", finalTravelList as Serializable)
             startActivity(intent)
         }
 
-        val finalTravelList =
-            intent.getSerializableExtra("listKey") as? ArrayList<ArrayList<String>?> //serializable을 ArrayList로 받음
-        Log.d("0329", "in edit, finalTravelList is $finalTravelList")
-        Log.d("0329", "in edit, index[0] is ${finalTravelList!![0]}")
+
 
 
         // parent 레이아웃 설정
@@ -94,13 +98,16 @@ class edit_plan_list : AppCompatActivity() {
 
                 // 여행지에 대한 버튼 생성 및 추가
                 val button = Button(this).apply {
-                    layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
+                    layoutParams = LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT).apply {
                         bottomMargin = (5 * resources.displayMetrics.density).toInt()
                     }
                     background = ContextCompat.getDrawable(context, R.drawable.btn_repple_ex)
                     setTypeface(ResourcesCompat.getFont(context, R.font.jua_ttf), Typeface.NORMAL)
                     textSize = 20f
                     text = "삭제"
+                    setTextColor(ContextCompat.getColor(context, R.color.white))
                 }
                 button.setOnClickListener {
                     placeLayout.removeAllViews()

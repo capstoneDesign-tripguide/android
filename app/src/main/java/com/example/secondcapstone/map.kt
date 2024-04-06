@@ -5,12 +5,16 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.ViewGroup
 import android.view.Window
 import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.core.view.marginTop
 import com.example.secondcapstone.databinding.ActivityMapBinding
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
@@ -37,13 +41,15 @@ internal class map : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     private lateinit var googleMap: GoogleMap
     private var currentMarker: Marker? = null
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMapBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val finalTravelList =
+            intent.getSerializableExtra("listKey") as? ArrayList<ArrayList<String>?> //serializable을 ArrayList로 받음
+        Log.d("map.kt", "$finalTravelList")
         //        val pt_jsonString = File("C:\Users\yeoyeoungkyu\Desktop\secondCapstone\app\src\main\res\raw\sample.json").readText()
         /*        res/raw 디렉토리의 파일은 앱의 리소스로 패키지화되어 디바이스에 설치될 때
                   압축되어 저장되므로 File 모듈로 읽어올 수 없다고 한다
@@ -56,11 +62,11 @@ internal class map : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         val listType = object : TypeToken<List<Place>>() {}.type
         places = Gson().fromJson(jsonString, listType) //jsonString을 리스트로 바꿈. onMapReady()에서 마커 추가하는데 사용
 
-
         this.mapView = binding.mapView
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync(this@map)
 
+        createBtn(finalTravelList)
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -154,6 +160,42 @@ internal class map : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         }
         return null
     }
+
+
+    private fun createBtn(finalTravelList: ArrayList<ArrayList<String>?>?) {
+        Log.d("0406", "$finalTravelList")
+        val layout = findViewById<LinearLayout>(R.id.parent_linear)
+
+        finalTravelList!!.forEachIndexed { index, locations ->
+            Log.d("0406", "repeat")
+            val button = Button(this).apply {
+                text = "${index + 1}일차 여행지 보기"
+                setBackgroundResource(R.drawable.btn_repple_ex)
+                textSize = 20f
+                typeface = resources.getFont(R.font.jua_ttf)
+                setTextColor(ContextCompat.getColor(context, R.color.white)) // 여기에 원하는 텍스트 색상의 리소스 ID를 넣으세요
+                // LinearLayout.LayoutParams를 사용하여 마진 설정 가능
+                val layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                ).apply {
+                    setMargins(0, 25, 0, 0)
+                }
+
+                this.layoutParams = layoutParams
+
+                setOnClickListener {
+                    Log.d("0406", "${finalTravelList[index]}")
+                }
+            }
+
+            Log.d("0406", "add view.")
+            layout.addView(button)
+        }
+    }
+
+
+
 
     data class LatLngEntity(
         var latitude: Double?,
