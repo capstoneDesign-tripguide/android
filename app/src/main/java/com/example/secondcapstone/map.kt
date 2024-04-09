@@ -40,6 +40,8 @@ internal class map : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     private lateinit var mapView: MapView
     private lateinit var googleMap: GoogleMap
     private var currentMarker: Marker? = null
+    // 현재 지도에 추가된 마커를 추적하는 리스트
+    val currentMarkers = mutableListOf<Marker>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -96,22 +98,25 @@ internal class map : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         this.googleMap = googleMap
 
         //LatLngEntity는 dataclass 이름. 하단에 있음
-//        currentMarker = setupMarker(LatLngEntity(37.5562,126.9724))  // default 서울역
+        //currentMarker = setupMarker(LatLngEntity(37.5562,126.9724))  // default 서울역
 
         // 변환된 객체 리스트를 반복하며 작업 수행
-        for (place in places) {
-            // places의 각 요소마다 마커 추가
-            // 처음엔 1일차 마커만 추가하고, 버튼들의 클릭 리스너에서 마커 clear 후 해당 일차 마커들 추가하면 될 것 같은데..
 
-            currentMarker = setupMarker(LatLngEntity(place.location.latitude, place.location.longitude), place.displayName.text)
-            Log.d("json", "latitud: ${place.location.latitude}, langitude: ${place.location.longitude}")
-            currentMarker?.showInfoWindow()
-        }
+        // places의 각 요소마다 마커 추가
+        // 처음엔 1일차 마커만 추가하고, 버튼들의 클릭 리스너에서 마커 clear 후 해당 일차 마커들 추가하면 될 것 같은데..
+
+        //처음 Map Ready 시 1일차 마커 생성
+        val place = places[0]
+        currentMarker = setupMarker(LatLngEntity(place.location.latitude, place.location.longitude), place.displayName.text)
+        Log.d("json", "latitud: ${place.location.latitude}, langitude: ${place.location.longitude}")
+        currentMarker?.showInfoWindow()
+
         googleMap.setOnMarkerClickListener(this) // 마커 클릭 리스너 설정
     }
 
 
-    private fun setupMarker(locationLatLngEntity: LatLngEntity, displayName: String): Marker? { //LatLngEntity 자료형의 locationLatLngEntity 매개변수. Marker?를 상속받음
+    private fun setupMarker(locationLatLngEntity: LatLngEntity, displayName: String): Marker? {
+        //LatLngEntity 자료형의 locationLatLngEntity 매개변수. Marker?를 상속받음
 
         val positionLatLng = LatLng(locationLatLngEntity.latitude!!,locationLatLngEntity.longitude!!)
         val markerOption = MarkerOptions().apply {
@@ -123,7 +128,11 @@ internal class map : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         googleMap.mapType = GoogleMap.MAP_TYPE_NORMAL  // 지도 유형 설정
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(positionLatLng, 15f))  // 카메라 이동
         googleMap.animateCamera(CameraUpdateFactory.zoomTo(15f))  // 줌의 정도 - 1 일 경우 세계지도 수준, 숫자가 커질 수록 상세지도가 표시됨
-        return googleMap.addMarker(markerOption)
+
+        val marker =  googleMap.addMarker(markerOption)
+        currentMarkers.add(marker!!) //나중에 이 리스트를 토대로 clearMarker 함수에서 마커를 지움
+
+        return marker
 
     }
     override fun onMarkerClick(marker: Marker): Boolean {
@@ -135,6 +144,7 @@ internal class map : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             showAlertDialog(place.displayName.text, place.rating)
         }
         return false
+
         /*
         false 리턴 -> 이벤트를 소비하지 않았다고 리턴함
         이벤트를 소비했다면 추가적인 이벤트 처리가 이루어지지 않는다고 함
@@ -180,6 +190,12 @@ internal class map : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         return null
     }
 
+    // 모든 기존 마커를 제거하고, 리스트를 비움
+    private fun clearMarkers() {
+        currentMarkers.forEach { it.remove() } //리스트의 모든 content에 대해 remove()함수 실행
+        currentMarkers.clear() //currentMarkers 리스트 초기화
+    }
+
     //여행 일자만큼 'n일차 마커 보기' 버튼 생성
     private fun createBtn(finalTravelList: ArrayList<ArrayList<String>?>?) {
         Log.d("0406", "$finalTravelList")
@@ -204,7 +220,17 @@ internal class map : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                 this.layoutParams = layoutParams
             }
             button.id = button_id //각 버튼의 아이디 추가. button_id는 View.generateViewId()로 생성했음
+
+
             button. setOnClickListener { //각 버튼의 클릭 리스너 추가
+                clearMarkers() //기존 마커 초기화
+                val place = places[index]
+
+                currentMarker = setupMarker(LatLngEntity(place.location.latitude, place.location.longitude), place.displayName.text)
+                Log.d("json", "latitud: ${place.location.latitude}, langitude: ${place.location.longitude}")
+                currentMarker?.showInfoWindow()
+
+                googleMap.setOnMarkerClickListener(this) // 마커 클릭 리스너 설정
                 Log.d("0409", "$button_id")
             }
             Log.d("0406", "add view.")
