@@ -26,12 +26,16 @@ import com.google.gson.reflect.TypeToken
 import org.json.JSONArray
 import java.io.File
 import java.io.InputStream
+import java.lang.reflect.Type
+
 data class Location(val latitude: Double, val longitude: Double)
 data class DisplayName(val text: String, val languageCode: String)
 data class Place(val id: String, val location: Location, val rating: Double, val displayName: DisplayName)
 
 internal class map : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
-    private lateinit var places: List<Place>
+//    private lateinit var places: List<Place>
+    private lateinit var places: List<List<Place>>
+    private var global_index: Int = -1
     companion object {
         const val TAG = "MapActivity"
     }
@@ -63,7 +67,10 @@ internal class map : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
 
         val listType = object : TypeToken<List<Place>>() {}.type
-        places = Gson().fromJson(jsonString, listType) //jsonString을 리스트로 바꿈. onMapReady()에서 마커 추가하는데 사용
+//        places = Gson().fromJson(jsonString, listType) //jsonString을 리스트로 바꿈. onMapReady()에서 마커 추가하는데 사용
+        val type: Type = object : TypeToken<List<List<Place>>>() {}.type
+        places = Gson().fromJson(jsonString, type)
+
         Log.d("0409", "$places")
         /*
         예시 json 기반으로 위 로그의 값은 이렇게 나옴
@@ -106,12 +113,19 @@ internal class map : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         // 처음엔 1일차 마커만 추가하고, 버튼들의 클릭 리스너에서 마커 clear 후 해당 일차 마커들 추가하면 될 것 같은데..
 
         //처음 Map Ready 시 1일차 마커 생성
-        val place = places[0]
-        currentMarker = setupMarker(LatLngEntity(place.location.latitude, place.location.longitude), place.displayName.text)
-        Log.d("json", "latitud: ${place.location.latitude}, langitude: ${place.location.longitude}")
-        currentMarker?.showInfoWindow()
+        for(place in places[0]) {
+            currentMarker = setupMarker(
+                LatLngEntity(place.location.latitude, place.location.longitude),
+                place.displayName.text
+            )
+            Log.d(
+                "json",
+                "latitud: ${place.location.latitude}, langitude: ${place.location.longitude}"
+            )
+            currentMarker?.showInfoWindow()
 
-        googleMap.setOnMarkerClickListener(this) // 마커 클릭 리스너 설정
+            googleMap.setOnMarkerClickListener(this) // 마커 클릭 리스너 설정
+        }
     }
 
 
@@ -181,13 +195,15 @@ internal class map : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
     // 마커와 연결된 place를 찾는 함수
     private fun findPlaceByMarker(marker: Marker): Place? {
-
-        for (place in places) {
-            if (marker.position.latitude == place.location.latitude && marker.position.longitude == place.location.longitude) {
-                return place
+        if(global_index > -1) { //global_index가 전역 변수라 혹시나 생길 에러 방지
+            for (place in places[global_index]) {
+                if (marker.position.latitude == place.location.latitude && marker.position.longitude == place.location.longitude) {
+                    return place
+                }
             }
         }
-        return null
+            return null
+
     }
 
     // 모든 기존 마커를 제거하고, 리스트를 비움
@@ -224,14 +240,27 @@ internal class map : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
             button. setOnClickListener { //각 버튼의 클릭 리스너 추가
                 clearMarkers() //기존 마커 초기화
-                val place = places[index]
 
-                currentMarker = setupMarker(LatLngEntity(place.location.latitude, place.location.longitude), place.displayName.text)
-                Log.d("json", "latitud: ${place.location.latitude}, langitude: ${place.location.longitude}")
-                currentMarker?.showInfoWindow()
+                //n일차 버튼 클릭 시 global_index를 n으로 설정, 각 n번째 마커 설정들 출동
+                global_index = index
 
-                googleMap.setOnMarkerClickListener(this) // 마커 클릭 리스너 설정
-                Log.d("0409", "$button_id")
+
+                if (global_index > -1){ //global_index가 전역 변수라 혹시나 생길 에러 방지
+                    for (place in places[global_index]) {
+                        currentMarker = setupMarker(
+                            LatLngEntity(place.location.latitude, place.location.longitude),
+                            place.displayName.text
+                        )
+                        Log.d(
+                            "json",
+                            "latitud: ${place.location.latitude}, langitude: ${place.location.longitude}"
+                        )
+                        currentMarker?.showInfoWindow()
+
+                        googleMap.setOnMarkerClickListener(this) // 마커 클릭 리스너 설정
+                        Log.d("0409", "$button_id")
+                    }
+                }
             }
             Log.d("0406", "add view.")
             layout.addView(button)
