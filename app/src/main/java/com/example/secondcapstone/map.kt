@@ -5,6 +5,7 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.Button
@@ -36,7 +37,6 @@ internal class map : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     }
 
     lateinit var binding: ActivityMapBinding
-
     private lateinit var mapView: MapView
     private lateinit var googleMap: GoogleMap
     private var currentMarker: Marker? = null
@@ -59,9 +59,32 @@ internal class map : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         val jsonString = inputStream.bufferedReader().use { it.readText() }
         Log.d("json", "$jsonString")
 
+
         val listType = object : TypeToken<List<Place>>() {}.type
         places = Gson().fromJson(jsonString, listType) //jsonString을 리스트로 바꿈. onMapReady()에서 마커 추가하는데 사용
+        Log.d("0409", "$places")
+        /*
+        예시 json 기반으로 위 로그의 값은 이렇게 나옴
+        [
+        Place(id=ChIJw8UIcGCifDURB0MtY-xAUqM,
+            location=Location(latitude=37.557839099999995,
+            longitude=126.9697808),
+            rating=4.1,
+            displayName=DisplayName(text=Seoullo 7017, languageCode=en)),
 
+         Place(id=sample1_id,
+            location=Location(latitude=37.55883909999999,
+            longitude=126.9707808),
+            rating=4.2,
+            displayName=DisplayName(text=sample1, languageCode=en)),
+
+        Place(id=sample2_id,
+            location=Location(latitude=37.5568391,
+            longitude=126.9687808),
+            rating=4.3,
+            displayName=DisplayName(text=sample2, languageCode=en))
+        ]
+         */
         this.mapView = binding.mapView
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync(this@map)
@@ -77,7 +100,8 @@ internal class map : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
         // 변환된 객체 리스트를 반복하며 작업 수행
         for (place in places) {
-            // 각 place에 대한 작업을 수행하세요.
+            // places의 각 요소마다 마커 추가
+            // 처음엔 1일차 마커만 추가하고, 버튼들의 클릭 리스너에서 마커 clear 후 해당 일차 마커들 추가하면 될 것 같은데..
 
             currentMarker = setupMarker(LatLngEntity(place.location.latitude, place.location.longitude), place.displayName.text)
             Log.d("json", "latitud: ${place.location.latitude}, langitude: ${place.location.longitude}")
@@ -118,6 +142,7 @@ internal class map : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         */
     }
 
+    //onMarkerClick()에서 마커 클릭 시 상세 정보 창 생성해주는 함수
     private fun showAlertDialog(displayName: String, rating: Double) {
         val layoutInflater = LayoutInflater.from(this)
         val view = layoutInflater.inflate(R.layout.marker_detail, null)
@@ -142,17 +167,11 @@ internal class map : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         }
 
         alertDialog.show()
-
-//        val alertDialogBuilder = AlertDialog.Builder(this)
-//        alertDialogBuilder
-//            .setTitle("여행지 정보")
-//            .setMessage(message)
-//            .setPositiveButton("확인") { dialog, _ -> dialog.dismiss() }
-//            .create()
-//            .show()
     }
+
+    // 마커와 연결된 place를 찾는 함수
     private fun findPlaceByMarker(marker: Marker): Place? {
-        // 마커와 연결된 place를 찾는 함수
+
         for (place in places) {
             if (marker.position.latitude == place.location.latitude && marker.position.longitude == place.location.longitude) {
                 return place
@@ -161,13 +180,14 @@ internal class map : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         return null
     }
 
-
+    //여행 일자만큼 'n일차 마커 보기' 버튼 생성
     private fun createBtn(finalTravelList: ArrayList<ArrayList<String>?>?) {
         Log.d("0406", "$finalTravelList")
         val layout = findViewById<LinearLayout>(R.id.parent_linear)
 
         finalTravelList!!.forEachIndexed { index, locations ->
             Log.d("0406", "repeat")
+            val button_id = View.generateViewId()
             val button = Button(this).apply {
                 text = "${index + 1}일차 여행지 보기"
                 setBackgroundResource(R.drawable.btn_repple_ex)
@@ -181,14 +201,12 @@ internal class map : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                 ).apply {
                     setMargins(0, 25, 0, 0)
                 }
-
                 this.layoutParams = layoutParams
-
-                setOnClickListener {
-                    Log.d("0406", "${finalTravelList[index]}")
-                }
             }
-
+            button.id = button_id //각 버튼의 아이디 추가. button_id는 View.generateViewId()로 생성했음
+            button. setOnClickListener { //각 버튼의 클릭 리스너 추가
+                Log.d("0409", "$button_id")
+            }
             Log.d("0406", "add view.")
             layout.addView(button)
         }

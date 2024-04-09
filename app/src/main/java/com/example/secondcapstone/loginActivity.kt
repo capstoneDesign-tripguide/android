@@ -88,7 +88,7 @@ class loginActivity : AppCompatActivity() {
 
         })
 
-
+        //토큰, oauth provider 줘야 함
         kakao_login_btn.setOnClickListener { //카카오 로그인
             UserApiClient.instance.loginWithKakaoTalk(context) { token, error ->
                 if (error != null) {
