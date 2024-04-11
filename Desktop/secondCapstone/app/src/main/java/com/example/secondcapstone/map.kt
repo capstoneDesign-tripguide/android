@@ -307,7 +307,7 @@ internal class map : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                     Log.d("0410","$origin")
                     Log.d("0410","$destination")
 //                    drawRoute(googleMap, origin, destination, R.string.google_map_key.toString()) //The provided API key is invalid
-                    drawRoute(googleMap, origin, destination, "AIzaSyByXRkTKRM3O8P1Sq7fbI4I60UMVdovReg") //This API project is not authorized to use this API
+                    drawRoute(googleMap, origin, destination, "${R.string.google_map_key}") //This API project is not authorized to use this API
                }
             }
             Log.d("0406", "add view.")
