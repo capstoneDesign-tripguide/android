@@ -15,3 +15,14 @@
 local.properties
 /android/app/src/main/res/drawable/*
 /android/app/src/main/res/valeus/*
+/Application Data/
+/Cookies/
+/Local Settings/
+/My Documents/
+/NetHood/
+/PrintHood/
+/Recent/
+/SendTo/
+/Templates/
+/시작 메뉴/
+
