@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".calendar"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="30dp"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:fontFamily="@font/jua_ttf"
+        android:text="여행지 및 계획"
+        android:textSize="40dp"
+        android:textColor="#000000"/>
+
+    <Button
+        android:id="@+id/search_travel_spot"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/search_box"
+        android:completionThreshold="1"
+        android:drawableRight="@drawable/searchbutton"
+        android:paddingRight="10dp"
+        android:fontFamily="@font/jua_ttf"
+        android:hint="가고 싶은 여행지를 입력해보세요!"
+        android:paddingLeft="16dp"
+        android:textSize="15dp" />
+
+
+<!--        <TextView-->
+<!--            android:layout_marginTop="30dp"-->
+<!--            android:id="@+id/travel_spot"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="50dp"-->
+<!--            android:fontFamily="@font/jua_ttf"-->
+<!--            android:text="tarvel_spot"-->
+<!--            android:textSize="30dp"-->
+<!--            android:textColor="#000000"/>-->
+
+    <com.prolificinteractive.materialcalendarview.MaterialCalendarView
+        android:id="@+id/calendarview"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/skyblue_background"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:theme="@style/CalenderViewCustom"
+        app:mcv_dateTextAppearance="@style/CalenderViewDateCustomText"
+        app:mcv_selectionMode="range"
+        app:mcv_weekDayTextAppearance="@style/CalenderViewWeekCustomText"
+        app:mcv_firstDayOfWeek="monday"
+        android:layout_gravity="center"/>
+
+    <TextView
+        android:id="@+id/travelDate"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_gravity="center"
+        android:fontFamily="@font/jua_ttf"
+        android:gravity="top|center"
+        android:text=""
+        android:textColor="@color/black"
+        android:textSize="25dp" />
+
+    <Button
+        android:id="@+id/closeButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/btn_repple_ex"
+        android:fontFamily="@font/jua_ttf"
+        android:text="선택 완료"
+        android:textColor="#ffffff"
+        android:textSize="17dp" />
+
+
+</LinearLayout>
