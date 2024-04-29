@@ -22,7 +22,7 @@ map.kt 로직
 4. drawRoute에서 api 키 R.string.으로 호출 불가(input stream 이용?)
 5. pollyline 제대로 제거 안 됨
     -> 생각해보니 currentPollyline 하나로 추적하고 있었는데 3일차의 경우 폴리라인을 2개 추가함
-        그래서 최근에 추가한 하나의 폴리라인만 제거된다.
+        그래서 최근에 추가한 하나의 폴리라인만 제거된다. -> 리스트로 만들어서 해결
 
 */
 
@@ -82,6 +82,7 @@ internal class map : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
     // 얘는 현재 폴리 라인(경로)을 추적
     var currentPolyline: Polyline? = null
+    val polylines = mutableListOf<Polyline?>() //currentPolyline들을 추가할 리스트. 일자 변경 시 clearPollyLines()가 얘를 초기화함
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -248,6 +249,12 @@ internal class map : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         currentMarkers.clear() //currentMarkers 리스트 초기화
     }
 
+    private fun clearPolylines(){
+        polylines.forEach { it?.remove()}
+        polylines.clear()
+
+    }
+
     //여행 일자만큼 'n일차 마커 보기' 버튼 생성
     private fun createBtn(finalTravelList: ArrayList<ArrayList<String>?>?) {
         Log.d("0406", "$finalTravelList")
@@ -278,11 +285,12 @@ internal class map : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                 clearMarkers() //기존 마커 초기화
                 Log.d("0412", "start to clear currentPollyline")
 
-                currentPolyline?.remove() // 폴리라인 초기화
-                Log.d("0412", "currentPollyline is removed. and is $currentPolyline")
-
-                currentPolyline = null // 폴리라인 초기화2
-                Log.d("0412", "currentPollyline is deallocated. and is $currentPolyline")
+                clearPolylines() //기존 폴리 라인들 초기화
+//                currentPolyline?.remove() // 폴리라인 초기화
+//                Log.d("0412", "currentPollyline is removed. and is $currentPolyline")
+//
+//                currentPolyline = null // 폴리라인 초기화2
+//                Log.d("0412", "currentPollyline is deallocated. and is $currentPolyline")
 
                 //n일차 버튼 클릭 시 global_index를 n으로 설정, 각 n번째 마커 설정들 출동
                 global_index = index
@@ -346,11 +354,12 @@ internal class map : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
                 //지도에 폴리 라인을 그리고, 반환된 객체를 currentPolyline에 저장
                 currentPolyline = map.addPolyline(PolylineOptions().addAll(decodedPath))
+                polylines.add(currentPolyline)
                 Log.d("0412", "currentPolyline added. and is $currentPolyline")
             } else {
-                // routes 배열이 비어 있을 때의 처리 로직
-                Log.e("drawRoute", "No routes found.") //이게 나오네.. routes 배열이 비어 있음
-                //그럼 line 318 routes에 대해 조사해보자
+
+                Log.e("drawRoute", "No routes found.")
+
             }
         }, { error ->
             Log.d("0411", "draw routes error")
