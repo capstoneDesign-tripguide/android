@@ -1,6 +1,7 @@
 package com.example.secondcapstone
 
 data class retroTestResponse(
-    val status: String,
-    val message: String,
+    val accessToken: String,
+    val refreshToken: String,
+    val loginSuccess: Boolean
 )

@@ -19,7 +19,11 @@ map.kt 로직
 1. 마커 사이의 경로 생성 -> 끝
 2. 마커로 순서를 보일 수 있을지 -> 힘들지 않을까..
 3. 숙소 위치... 를 고려해야 함. 항상 첫 경로는 숙소 -> 여행지1, 마지막 경로는 여행지n -> 숙소
-4. drawRoute에서 api 키 R.string.으로
+4. drawRoute에서 api 키 R.string.으로 호출 불가(input stream 이용?)
+5. pollyline 제대로 제거 안 됨
+    -> 생각해보니 currentPollyline 하나로 추적하고 있었는데 3일차의 경우 폴리라인을 2개 추가함
+        그래서 최근에 추가한 하나의 폴리라인만 제거된다.
+
 */
 
 import android.graphics.Color
@@ -72,6 +76,7 @@ internal class map : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     private lateinit var mapView: MapView
     private lateinit var googleMap: GoogleMap
     private var currentMarker: Marker? = null
+
     // 현재 지도에 추가된 마커를 추적하는 리스트
     val currentMarkers = mutableListOf<Marker>()
 
@@ -271,8 +276,13 @@ internal class map : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
             button. setOnClickListener { //각 버튼의 클릭 리스너 추가
                 clearMarkers() //기존 마커 초기화
+                Log.d("0412", "start to clear currentPollyline")
+
                 currentPolyline?.remove() // 폴리라인 초기화
+                Log.d("0412", "currentPollyline is removed. and is $currentPolyline")
+
                 currentPolyline = null // 폴리라인 초기화2
+                Log.d("0412", "currentPollyline is deallocated. and is $currentPolyline")
 
                 //n일차 버튼 클릭 시 global_index를 n으로 설정, 각 n번째 마커 설정들 출동
                 global_index = index
@@ -306,9 +316,7 @@ internal class map : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                     //1일차, 2일차엔 로그 안 찍힘
                     Log.d("0410","$origin")
                     Log.d("0410","$destination")
-//                    drawRoute(googleMap, origin, destination, R.string.google_map_key.toString()) //The provided API key is invalid
-                    drawRoute(googleMap, origin, destination, "${R.string.google_map_key}") //This API project is not authorized to use this API
-               }
+                    drawRoute(googleMap, origin, destination, "AIzaSyByXRkTKRM3O8P1Sq7fbI4I60UMVdovReg")               }
             }
             Log.d("0406", "add view.")
             layout.addView(button)
@@ -319,7 +327,7 @@ internal class map : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                 "origin=${origin.latitude},${origin.longitude}&" +
                 "destination=${destination.latitude},${destination.longitude}&" +
                 "mode=transit&" + // 예시로 자동차 모드 선택
-                //deafult: driving 모드.
+                //deafult: driving 모드. //걷기, 대중교통, 자동차
                 "key=$apiKey"
         Log.d("0410", "$url")
 
@@ -338,6 +346,7 @@ internal class map : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
                 //지도에 폴리 라인을 그리고, 반환된 객체를 currentPolyline에 저장
                 currentPolyline = map.addPolyline(PolylineOptions().addAll(decodedPath))
+                Log.d("0412", "currentPolyline added. and is $currentPolyline")
             } else {
                 // routes 배열이 비어 있을 때의 처리 로직
                 Log.e("drawRoute", "No routes found.") //이게 나오네.. routes 배열이 비어 있음

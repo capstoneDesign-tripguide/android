@@ -92,43 +92,16 @@ class loginActivity : AppCompatActivity() {
         kakao_login_btn.setOnClickListener { //카카오 로그인
             UserApiClient.instance.loginWithKakaoTalk(context) { token, error ->
                 if (error != null) {
-                    Log.e("test", "kakao login failed", error)
+                    Log.d("kakaoLogin", "kakao login failed", error)
                 }
                 else if (token != null) {
-                    Log.i("test", "kakao login successed ${token.accessToken}")
-                    
+                    Log.d("kakaoLogin", "kakao login successed ${token.accessToken}")
+                    retroCall(token.accessToken, "kakao")
                 }
             }
         }
 
-        val retrofit = Retrofit.Builder() //retrofit 객체 생성
-            .baseUrl("https://jsonplaceholder.typicode.com") //서버 주소
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-        val apiService = retrofit.create(retroTestInterface::class.java)
 
-        val requestData = retroTestRequest( //보낼 데이터 초기화
-            ID = editText_id.text.toString(),
-            PASSWORD = editText_pw.text.toString()
-        )
-        val call = apiService.sendDataToServer(requestData)
-
-        call.enqueue(object : retrofit2.Callback<retroTestResponse> {
-            override fun onResponse(
-                call: Call<retroTestResponse>,
-                response: retrofit2.Response<retroTestResponse>
-            ) {
-                // 성공적으로 응답을 받았을 때 처리
-                val responseData = response.body()
-                Log.d("communication", "API communication is successed.")
-                Log.d("communication", "${responseData}")
-            }
-
-            override fun onFailure(call: Call<retroTestResponse>, t: Throwable) {
-                // 통신 실패 시 처리
-                Log.d("communication", "API communication is failed.")
-            }
-        })
 
 
         editText_id.setOnFocusChangeListener { view, hasFocus ->
@@ -211,6 +184,41 @@ class loginActivity : AppCompatActivity() {
             }
         }
         return maskedText.toString()
+    }
+
+    private fun retroCall(accessToken: String, Provider: String){
+        val retrofit = Retrofit.Builder()
+            .baseUrl("https://jsonplaceholder.typicode.com") //서버 주소
+            .addConverterFactory(GsonConverterFactory.create())
+            .build() //retrofit 객체 생성
+
+        //인터페이스를 Retrofit과 연결. HTTP 요청을 처리할 동적 프록시 객체 생성.
+        val apiService = retrofit.create(retroTestInterface::class.java)
+
+        val requestData = retroKakao( //보낼 데이터 초기화
+            accessToken = accessToken,
+            Provider = "kakao"
+        )
+
+        //sendDataToServer는 apiService 객체의 retroTestInterface에 정의됨
+        val call = apiService.sendDataToServer(requestData)
+
+        call.enqueue(object : retrofit2.Callback<retroTestResponse> {
+            override fun onResponse(
+                call: Call<retroTestResponse>,
+                response: retrofit2.Response<retroTestResponse>
+            ) {
+                // 성공적으로 응답을 받았을 때 처리
+                val responseData = response.body()
+                Log.d("communication", "API communication is successed.")
+                Log.d("communication", "${responseData}")
+            }
+
+            override fun onFailure(call: Call<retroTestResponse>, t: Throwable) {
+                // 통신 실패 시 처리
+                Log.d("communication", "API communication is failed.")
+            }
+        })
     }
 
 }
