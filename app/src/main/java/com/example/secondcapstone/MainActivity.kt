@@ -86,7 +86,7 @@ class MainActivity : AppCompatActivity() {
 
 
         autoButton.setOnClickListener {
-            if (isLogin.isLogin == true){
+            if (isLogin.isLogin == true){ //로그인 상태여야 작동
                 var intent = Intent(this, calendar::class.java)
                 startActivity(intent)}
             else{
