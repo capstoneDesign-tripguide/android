@@ -195,18 +195,19 @@ class loginActivity : AppCompatActivity() {
         //인터페이스를 Retrofit과 연결. HTTP 요청을 처리할 동적 프록시 객체 생성.
         val apiService = retrofit.create(retroTestInterface::class.java)
 
-        val requestData = retroKakao( //보낼 데이터 초기화
+        val requestData = LoginRequest( //보낼 데이터 초기화
             accessToken = accessToken,
             Provider = "kakao"
         )
 
         //sendDataToServer는 apiService 객체의 retroTestInterface에 정의됨
+        //LoginRequest 데이터 클래스를 매개변수로 받고, 이건 requestData 변수에 저장돼 있음
         val call = apiService.sendDataToServer(requestData)
 
-        call.enqueue(object : retrofit2.Callback<retroTestResponse> {
+        call.enqueue(object : retrofit2.Callback<LoginSuccessResponse> {
             override fun onResponse(
-                call: Call<retroTestResponse>,
-                response: retrofit2.Response<retroTestResponse>
+                call: Call<LoginSuccessResponse>,
+                response: Response<LoginSuccessResponse>
             ) {
                 // 성공적으로 응답을 받았을 때 처리
                 val responseData = response.body()
@@ -214,7 +215,7 @@ class loginActivity : AppCompatActivity() {
                 Log.d("communication", "${responseData}")
             }
 
-            override fun onFailure(call: Call<retroTestResponse>, t: Throwable) {
+            override fun onFailure(call: Call<LoginSuccessResponse>, t: Throwable) {
                 // 통신 실패 시 처리
                 Log.d("communication", "API communication is failed.")
             }

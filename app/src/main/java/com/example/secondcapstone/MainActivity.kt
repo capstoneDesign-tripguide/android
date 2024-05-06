@@ -14,6 +14,7 @@ import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -83,14 +84,24 @@ class MainActivity : AppCompatActivity() {
         val autoButton = findViewById<Button>(R.id.autoBtn)
         val directButton = findViewById<Button>(R.id.directBtn)
 
+
         autoButton.setOnClickListener {
-            var intent = Intent(this, calendar::class.java)
-            startActivity(intent)
+            if (isLogin.isLogin == true){
+                var intent = Intent(this, calendar::class.java)
+                startActivity(intent)}
+            else{
+                Toast.makeText(this, "로그인 해 주세요.", Toast.LENGTH_SHORT).show()
+            }
         }
 
         directButton.setOnClickListener {
-            var intent = Intent(this, direct_generate::class.java)
-            startActivity(intent)
+            if (isLogin.isLogin == true) {
+                var intent = Intent(this, direct_generate::class.java)
+                startActivity(intent)
+            }
+            else{
+                Toast.makeText(this, "로그인 해 주세요.", Toast.LENGTH_SHORT).show()
+        }
         }
 
 

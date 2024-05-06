@@ -11,5 +11,5 @@ interface retroTestInterface {
 
     //Body 어노테이션은 요청 본문에 데이터를 포함시키기 위해 사용
 
-    fun sendDataToServer(@Body data: retroKakao): Call<retroTestResponse>
+    fun sendDataToServer(@Body data: LoginRequest): Call<LoginSuccessResponse>
 }
