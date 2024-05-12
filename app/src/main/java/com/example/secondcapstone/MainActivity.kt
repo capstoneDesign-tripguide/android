@@ -84,25 +84,37 @@ class MainActivity : AppCompatActivity() {
         val autoButton = findViewById<Button>(R.id.autoBtn)
         val directButton = findViewById<Button>(R.id.directBtn)
 
-
         autoButton.setOnClickListener {
-            if (isLogin.isLogin == true){ //로그인 상태여야 작동
+
                 var intent = Intent(this, calendar::class.java)
-                startActivity(intent)}
-            else{
-                Toast.makeText(this, "로그인 해 주세요.", Toast.LENGTH_SHORT).show()
-            }
+                startActivity(intent)
         }
 
         directButton.setOnClickListener {
-            if (isLogin.isLogin == true) {
+
                 var intent = Intent(this, direct_generate::class.java)
                 startActivity(intent)
-            }
-            else{
-                Toast.makeText(this, "로그인 해 주세요.", Toast.LENGTH_SHORT).show()
+
+
         }
-        }
+//        autoButton.setOnClickListener {
+//            if (isLogin.isLogin == true){ //로그인 상태여야 작동
+//                var intent = Intent(this, calendar::class.java)
+//                startActivity(intent)}
+//            else{
+//                Toast.makeText(this, "로그인 해 주세요.", Toast.LENGTH_SHORT).show()
+//            }
+//        }
+//
+//        directButton.setOnClickListener {
+//            if (isLogin.isLogin == true) {
+//                var intent = Intent(this, direct_generate::class.java)
+//                startActivity(intent)
+//            }
+//            else{
+//                Toast.makeText(this, "로그인 해 주세요.", Toast.LENGTH_SHORT).show()
+//            }
+//        }
 
 
 
