@@ -87,12 +87,22 @@ class MainActivity : AppCompatActivity() {
         autoButton.setOnClickListener {
 
                 var intent = Intent(this, calendar::class.java)
+
+                //여행모드 변경
+                planMode.Manual = false
+                planMode.Automatic = true
+
                 startActivity(intent)
         }
 
         directButton.setOnClickListener {
 
-                var intent = Intent(this, direct_generate::class.java)
+                var intent = Intent(this, calendar::class.java)
+
+                //여행모드 변경
+                planMode.Automatic = false
+                planMode.Manual = true
+
                 startActivity(intent)
 
 

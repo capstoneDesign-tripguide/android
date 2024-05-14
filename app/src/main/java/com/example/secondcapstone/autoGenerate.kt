@@ -58,11 +58,19 @@ class autoGenerate : AppCompatActivity() {
 //                }
 //            })
 
+            if (planMode.Manual == true) { // 수동 모드면 plan_list.kt로
+                var intent = Intent(this, plan_list::class.java)
+                intent.putStringArrayListExtra("dateList", ArrayList(dateList))
+                startActivity(intent)
+                finish()
+            }
+            else { //자동 모드면 바로 map.kt로
+                var intent = Intent(this, map::class.java)
+                intent.putStringArrayListExtra("dateList", ArrayList(dateList))
+                startActivity(intent)
+                finish()
+            }
 
-            var intent = Intent(this, plan_list::class.java)
-            intent.putStringArrayListExtra("dateList",ArrayList(dateList))
-            startActivity(intent)
-            finish()
         }
         val tag = findViewById<EditText>(R.id.tag)
 
