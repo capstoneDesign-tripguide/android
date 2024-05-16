@@ -50,8 +50,8 @@ class edit_plan_list : AppCompatActivity() {
         //------------------까지 네비게이션 요소들------------------
         val finalTravelList =
             intent.getSerializableExtra("listKey") as? ArrayList<ArrayList<String>?> //serializable을 ArrayList로 받음
-        Log.d("in edit", "in edit, finalTravelList is $finalTravelList")
-        Log.d("in edit", "in edit, index[0] is ${finalTravelList!![0]}")
+        Log.d("edit", "in edit, finalTravelList is $finalTravelList")
+        Log.d("edit", "in edit, index[0] is ${finalTravelList!![0]}")
 
 
         val go_to_map_button = findViewById<Button>(R.id.go_to_map)
@@ -89,9 +89,10 @@ class edit_plan_list : AppCompatActivity() {
                 // 여행지 TextView 생성 및 추가
                 val placeTextView = TextView(this).apply {
                     text = place
-                    textSize = 16f
+                    textSize = 20f
                     layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
                 }
+                placeTextView.setTextColor(Color.BLACK)
                 val place = placeTextView.text.toString()
 
                 placeLayout.addView(placeTextView)

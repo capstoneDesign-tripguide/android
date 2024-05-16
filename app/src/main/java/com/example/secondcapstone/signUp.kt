@@ -13,6 +13,7 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -169,16 +170,12 @@ class signUp : AppCompatActivity() {
 
                 //데이터 클래스로 만들어서 서버로 보내기
                 val SignupDAta = SignupData(ID, PASSWORD, NAME)
+                Toast.makeText(this, "회원 가입이 완료됐습니다.", Toast.LENGTH_SHORT).show()
+                finish()
             }
 
         }
 
-
-//        editTextBirthday = findViewById(R.id.editText_birthday)
-//
-//        // EditText를 클릭하면 DatePickerDialog를 표시
-//        editTextBirthday.setOnClickListener {
-//            showDatePickerDialog()
         }
 
     //텍스트 마스킹 함수. 최근 입력한 문자만 표시하고, 나머지 문자는 *로 마스킹한 채로 반환한다.
@@ -196,22 +193,3 @@ class signUp : AppCompatActivity() {
             return maskedText.toString()
         }
     }
-
-//    private fun showDatePickerDialog() { //캘린더 모듈인데 나중에 쓰자
-//        val calendar = Calendar.getInstance()
-//        val year = calendar.get(Calendar.YEAR)
-//        val month = calendar.get(Calendar.MONTH)
-//        val day = calendar.get(Calendar.DAY_OF_MONTH)
-//
-//        val datePickerDialog = DatePickerDialog(this,
-//            { _: DatePicker, selectedYear: Int, monthOfYear: Int, dayOfMonth: Int ->
-//                // 날짜가 설정되었을 때 수행할 작업
-//                // selectedYear, monthOfYear, dayOfMonth 값을 사용할 수 있습니다.
-//                val selectedDate = "$selectedYear-${monthOfYear + 1}-$dayOfMonth"
-//                editTextBirthday.setText(selectedDate)
-//            }, year, month, day)
-//
-//        // DatePickerDialog를 표시
-//        datePickerDialog.show()
-//    }
-//  }

@@ -53,7 +53,7 @@ class loginActivity : AppCompatActivity() {
 
         context = this
 
-        naver_init() //네이버 로그인초기화
+        //naver_init() //네이버 로그인초기화 -> 네이버 안 씀
 
         val text_id = findViewById<TextView>(R.id.text_id)
         val editText_id = findViewById<EditText>(R.id.editText_id) //아이디
@@ -143,43 +143,43 @@ class loginActivity : AppCompatActivity() {
         }
     }
 
-    //네이버 아이디 로그인 API
-    private fun naver_init() {
-        context = this
-        NaverIdLoginSDK.apply {
-            showDevelopersLog(true)
-            initialize(context, getString(R.string.naver_client_id), getString(R.string.naver_client_secret), getString(R.string.naver_client_name))
-
-            isShowMarketLink = true
-            isShowBottomTab = true
-        }
-
-        binding.buttonOAuthLoginImg.setOAuthLogin(object : OAuthLoginCallback {
-            override fun onSuccess() {
-                Log.d("test", "naver login success")
-                Log.d("test", "AccessToken : " + NaverIdLoginSDK.getAccessToken())
-                Log.d("test", "client id : " + getString(R.string.naver_client_id))
-                Log.d("test", "ReFreshToken : " + NaverIdLoginSDK.getRefreshToken())
-                Log.d("test", "Expires : " + NaverIdLoginSDK.getExpiresAt().toString())
-                Log.d("test", "TokenType : " + NaverIdLoginSDK.getTokenType())
-                Log.d("test", "State : " + NaverIdLoginSDK.getState().toString())
-                //updateView()
-            }
-
-            override fun onFailure(httpStatus: Int, message: String) {
-                val errorCode = NaverIdLoginSDK.getLastErrorCode().code
-                val errorDescription = NaverIdLoginSDK.getLastErrorDescription()
-                Log.d("test", "naver login failed. ErrorCode: ${errorCode}, ErrorDescription: ${errorDescription}")
-            }
-
-            override fun onError(errorCode: Int, message: String) {
-                Log.d("test", "naver login error")
-                onFailure(errorCode, message)
-            }
-
-        })
-
-    }
+    //네이버 아이디 로그인 API -> 근데 네이버 안 쓰게 바꿈
+//    private fun naver_init() {
+//        context = this
+//        NaverIdLoginSDK.apply {
+//            showDevelopersLog(true)
+//            initialize(context, getString(R.string.naver_client_id), getString(R.string.naver_client_secret), getString(R.string.naver_client_name))
+//
+//            isShowMarketLink = true
+//            isShowBottomTab = true
+//        }
+//
+//        binding.buttonOAuthLoginImg.setOAuthLogin(object : OAuthLoginCallback {
+//            override fun onSuccess() {
+//                Log.d("test", "naver login success")
+//                Log.d("test", "AccessToken : " + NaverIdLoginSDK.getAccessToken())
+//                Log.d("test", "client id : " + getString(R.string.naver_client_id))
+//                Log.d("test", "ReFreshToken : " + NaverIdLoginSDK.getRefreshToken())
+//                Log.d("test", "Expires : " + NaverIdLoginSDK.getExpiresAt().toString())
+//                Log.d("test", "TokenType : " + NaverIdLoginSDK.getTokenType())
+//                Log.d("test", "State : " + NaverIdLoginSDK.getState().toString())
+//                //updateView()
+//            }
+//
+//            override fun onFailure(httpStatus: Int, message: String) {
+//                val errorCode = NaverIdLoginSDK.getLastErrorCode().code
+//                val errorDescription = NaverIdLoginSDK.getLastErrorDescription()
+//                Log.d("test", "naver login failed. ErrorCode: ${errorCode}, ErrorDescription: ${errorDescription}")
+//            }
+//
+//            override fun onError(errorCode: Int, message: String) {
+//                Log.d("test", "naver login error")
+//                onFailure(errorCode, message)
+//            }
+//
+//        })
+//
+//    }
 
     private fun maskPassword(s: CharSequence?): String { // CharSequence 객체 s를 매개변수로 받음
         // 최근에 입력된 문자만 표시하고 나머지는 특수문자로 마스킹하기
@@ -222,8 +222,22 @@ class loginActivity : AppCompatActivity() {
                 val responseData = response.body()
                 Log.d("communication", "API communication is successed.")
                 Log.d("communication", "${responseData}")
-                Toast.makeText(this@loginActivity, "로그인 했습니다.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@loginActivity, "로그인에 성공했습니다.", Toast.LENGTH_SHORT).show()
                 isLogin.isLogin = true
+
+                UserApiClient.instance.me { user, error ->
+                    if (error != null) {
+                        Log.e("instance_test", "사용자 정보 요청 실패", error)
+                    }
+                    else if (user != null) {
+                        Log.i("instance_test", "사용자 정보 요청 성공" +
+                                "\n회원번호: ${user.id}" +
+                                "\n이메일: ${user.kakaoAccount?.email}" +
+                                "\n닉네임: ${user.kakaoAccount?.profile?.nickname}" +
+                                "\n프로필사진: ${user.kakaoAccount?.profile?.thumbnailImageUrl}")
+                    }
+                }
+
                 finish()
             }
 

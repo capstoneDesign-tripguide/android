@@ -22,6 +22,7 @@ import com.example.secondcapstone.databinding.ActivityMainBinding
 import com.example.secondcapstone.databinding.LoginActivityBinding
 import com.kakao.sdk.common.KakaoSdk
 import com.kakao.sdk.common.util.Utility
+import com.kakao.sdk.user.UserApiClient
 import com.navercorp.nid.NaverIdLoginSDK
 import java.io.File
 import java.io.InputStream
@@ -35,7 +36,28 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         Log.d("test0121", "keyhash : ${Utility.getKeyHash(this)}") //해시키 구하기
 
+        val logout = findViewById<Button>(R.id.logout_test)
+        logout.setOnClickListener {// 로그아웃
 
+            UserApiClient.instance.logout { error -> //토큰 만료
+                if (error != null) {
+                    Log.d("instance_logout", "토큰 만료 실패")
+                }
+                else {
+                    Log.d("instance_logout", "토큰 만료 성공")
+                }
+            }
+
+            UserApiClient.instance.unlink { error -> //연결 해제
+                if (error != null) {
+                    Log.d("instance_ulink", "연결 해제 실패")
+                    Log.d("instance_ulink", "${error.message}")
+                }
+                else {
+                    Log.d("instance_ulink", "연결 해제 성공")
+                }
+            }
+        }
 
         //네비게이션 요소들
         val navBtn = findViewById<Button>(R.id.testbtn)

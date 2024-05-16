@@ -143,7 +143,7 @@ internal class map : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         this.mapView = binding.mapView
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync(this@map)
-
+        Log.d("0406", "$finalTravelList before called")
         createBtn(finalTravelList)
     }
 
