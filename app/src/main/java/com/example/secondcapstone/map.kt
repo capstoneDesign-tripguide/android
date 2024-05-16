@@ -107,39 +107,33 @@ internal class map : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                   압축되어 저장되므로 File 모듈로 읽어올 수 없다고 한다
                   따라서 밑과 같이 inputStream을 이용해야 함 (자바와 안드로이드에서 데이터를 바이트 단위로 읽어오는 데 사용되는 클래스)
         */
-        val inputStream: InputStream = resources.openRawResource(R.raw.sample)
-        val jsonString = inputStream.bufferedReader().use { it.readText() }
-        Log.d("json", "$jsonString")
+
+        if (planMode.Manual == true){
+            val inputStream: InputStream = resources.openRawResource(R.raw.sample)
+            val jsonString = inputStream.bufferedReader().use { it.readText() }
+            Log.d("json", "$jsonString")
 
 
-        val listType = object : TypeToken<List<Place>>() {}.type
+            val listType = object : TypeToken<List<Place>>() {}.type
 //        places = Gson().fromJson(jsonString, listType) //jsonString을 리스트로 바꿈. onMapReady()에서 마커 추가하는데 사용
-        val type: Type = object : TypeToken<List<List<Place>>>() {}.type
-        places = Gson().fromJson(jsonString, type)
+            val type: Type = object : TypeToken<List<List<Place>>>() {}.type
+            places = Gson().fromJson(jsonString, type)
+            Log.d("mode", "$places")
+        }
+        else if (planMode.Automatic == true){
+            val inputStream: InputStream = resources.openRawResource(R.raw.sample2)
+            val jsonString = inputStream.bufferedReader().use { it.readText() }
+            Log.d("json", "$jsonString")
 
-        Log.d("0409", "$places")
-        /*
-        예시 json 기반으로 위 로그의 값은 이렇게 나옴
-        [
-        Place(id=ChIJw8UIcGCifDURB0MtY-xAUqM,
-            location=Location(latitude=37.557839099999995,
-            longitude=126.9697808),
-            rating=4.1,
-            displayName=DisplayName(text=Seoullo 7017, languageCode=en)),
 
-         Place(id=sample1_id,
-            location=Location(latitude=37.55883909999999,
-            longitude=126.9707808),
-            rating=4.2,
-            displayName=DisplayName(text=sample1, languageCode=en)),
+            val listType = object : TypeToken<List<Place>>() {}.type
+//        places = Gson().fromJson(jsonString, listType) //jsonString을 리스트로 바꿈. onMapReady()에서 마커 추가하는데 사용
+            val type: Type = object : TypeToken<List<List<Place>>>() {}.type
+            places = Gson().fromJson(jsonString, type)
+            Log.d("mode", "$places")
+        }
 
-        Place(id=sample2_id,
-            location=Location(latitude=37.5568391,
-            longitude=126.9687808),
-            rating=4.3,
-            displayName=DisplayName(text=sample2, languageCode=en))
-        ]
-         */
+
         this.mapView = binding.mapView
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync(this@map)
@@ -295,13 +289,18 @@ internal class map : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                 Log.d("0412", "start to clear currentPollyline")
 
                 clearPolylines() //기존 폴리 라인들 초기화
+
+
 //                currentPolyline?.remove() // 폴리라인 초기화
 //                Log.d("0412", "currentPollyline is removed. and is $currentPolyline")
 //
 //                currentPolyline = null // 폴리라인 초기화2
 //                Log.d("0412", "currentPollyline is deallocated. and is $currentPolyline")
 
+
+
                 //n일차 버튼 클릭 시 global_index를 n으로 설정, 각 n번째 마커 설정들 출동
+
                 global_index = index
                 if (global_index > -1){ //global_index가 전역 변수라 혹시나 생길 에러 방지
                     for (place in places[global_index]) {

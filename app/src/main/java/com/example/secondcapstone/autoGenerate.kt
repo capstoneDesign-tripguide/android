@@ -20,8 +20,10 @@ import retrofit2.Call
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.Serializable
 
 class autoGenerate : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.auto_generate)
@@ -59,22 +61,38 @@ class autoGenerate : AppCompatActivity() {
 //            })
 
 
-//            if (planMode.Manual == true) { // 수동 모드면 plan_list.kt로
-//                var intent = Intent(this, plan_list::class.java)
-//                intent.putStringArrayListExtra("dateList", ArrayList(dateList))
-//                startActivity(intent)
-//                finish()
-//            }
-//            else { //자동 모드면 바로 map.kt로
-//                var intent = Intent(this, map::class.java)
-//                intent.putStringArrayListExtra("dateList", ArrayList(dateList))
-//                startActivity(intent)
-//                finish()
-//            }
-            var intent = Intent(this, plan_list::class.java)
-            intent.putStringArrayListExtra("dateList", ArrayList(dateList))
-            startActivity(intent)
-            finish()
+            if (planMode.Manual == true) { // 수동 모드면 plan_list.kt로
+                var intent = Intent(this, plan_list::class.java)
+                intent.putStringArrayListExtra("dateList", ArrayList(dateList))
+                startActivity(intent)
+                finish()
+            }
+            else { //자동 모드면 바로 map.kt로
+                var intent = Intent(this, edit_plan_list::class.java)
+                // ArrayList<ArrayList<String>?> 타입의 finalTravelList 선언
+                var finalTravelList = ArrayList<ArrayList<String>?>()
+
+                // 첫 번째 서브 리스트 생성 및 값 할당
+                val travelSubList1 = arrayListOf("남산 공원", "몽탄", "전쟁기념관", "북촌육경", "오다리집 간장게장")
+
+                // 두 번째 서브 리스트 생성 및 값 할당
+                val travelSubList2 = arrayListOf("목면상방 남산타워점", "남산 자물쇠", "N 서울타워")
+
+                // 서브 리스트를 finalTravelList에 추가
+                finalTravelList.add(travelSubList1)
+                finalTravelList.add(travelSubList2)
+                Log.d("final","in auto, $finalTravelList")
+
+
+                intent.putExtra("listKey", finalTravelList as Serializable)
+                startActivity(intent)
+                finish()
+            }
+//
+//            var intent = Intent(this, plan_list::class.java)
+//            intent.putStringArrayListExtra("dateList", ArrayList(dateList))
+//            startActivity(intent)
+//            finish()
         }
         val tag = findViewById<EditText>(R.id.tag)
 

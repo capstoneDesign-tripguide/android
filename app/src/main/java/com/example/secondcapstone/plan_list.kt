@@ -166,6 +166,7 @@ class plan_list : AppCompatActivity(), plan_adpater.OnItemClickListener {
 
         //최종 리스트에 추가
         finalTravelList.add(addedList)
+        Log.d("final","$finalTravelList")
 
         val newLinearLayout = LinearLayout(this)
         newLinearLayout.orientation = LinearLayout.VERTICAL
