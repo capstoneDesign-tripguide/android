@@ -85,18 +85,22 @@ class MainActivity : AppCompatActivity() {
         val directButton = findViewById<Button>(R.id.directBtn)
 
         autoButton.setOnClickListener {
-
+            if (isLogin.isLogin == true){ //로그인 상태여야 작동
                 var intent = Intent(this, calendar::class.java)
 
                 //여행모드 변경
                 planMode.Manual = false
                 planMode.Automatic = true
-
                 startActivity(intent)
+            }
+
+            else{
+                Toast.makeText(this, "로그인 해 주세요.", Toast.LENGTH_SHORT).show()
+            }
         }
 
         directButton.setOnClickListener {
-
+            if (isLogin.isLogin == true) {
                 var intent = Intent(this, calendar::class.java)
 
                 //여행모드 변경
@@ -104,48 +108,12 @@ class MainActivity : AppCompatActivity() {
                 planMode.Manual = true
 
                 startActivity(intent)
-
-
+            }
+            else{
+                Toast.makeText(this, "로그인 해 주세요.", Toast.LENGTH_SHORT).show()
+            }
         }
-//        autoButton.setOnClickListener {
-//            if (isLogin.isLogin == true){ //로그인 상태여야 작동
-//                var intent = Intent(this, calendar::class.java)
-//                startActivity(intent)}
-//            else{
-//                Toast.makeText(this, "로그인 해 주세요.", Toast.LENGTH_SHORT).show()
-//            }
-//        }
-//
-//        directButton.setOnClickListener {
-//            if (isLogin.isLogin == true) {
-//                var intent = Intent(this, direct_generate::class.java)
-//                startActivity(intent)
-//            }
-//            else{
-//                Toast.makeText(this, "로그인 해 주세요.", Toast.LENGTH_SHORT).show()
-//            }
-//        }
 
-
-
-//        //뷰 바인딩
-//        calendarBinding = ActivityMainBinding.inflate(layoutInflater)
-//        setContentView(calendarBinding.root)
-//
-//        //mainActivity의 calendarBtn을 누르면
-//        calendarBinding.calendarBtn.setOnClickListener {
-//            val mDialogView = LayoutInflater.from(this).inflate(R.layout.calendar, null)
-//            val mbuilder = AlertDialog.Builder(this)
-//                .setView(mDialogView)
-//                .setTitle("날짜 선택")
-//            val mAlertDialog = mbuilder.show()
-//
-//            val closeBtn = mDialogView.findViewById<Button>(R.id.closeButton)
-//            closeBtn.setOnClickListener {
-//
-//                mAlertDialog.dismiss()
-//            }
-//        }
     }
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // 메뉴 리소스 인플레이션
@@ -172,20 +140,3 @@ class MainActivity : AppCompatActivity() {
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

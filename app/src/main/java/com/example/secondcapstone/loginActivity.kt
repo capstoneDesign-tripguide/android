@@ -132,6 +132,15 @@ class loginActivity : AppCompatActivity() {
             var intent = Intent(this, signUp::class.java)
             startActivity(intent)
         }
+
+        val loginBtn_in_activity = findViewById<Button>(R.id.loginBtn_in_activity)
+        loginBtn_in_activity.setOnClickListener {
+        //**************************************
+        //로그인 성공 시에만 적용하도록 수정해야 함
+        //**************************************
+            isLogin.isLogin = true
+            finish()
+        }
     }
 
     //네이버 아이디 로그인 API
@@ -213,6 +222,9 @@ class loginActivity : AppCompatActivity() {
                 val responseData = response.body()
                 Log.d("communication", "API communication is successed.")
                 Log.d("communication", "${responseData}")
+                Toast.makeText(this@loginActivity, "로그인 했습니다.", Toast.LENGTH_SHORT).show()
+                isLogin.isLogin = true
+                finish()
             }
 
             override fun onFailure(call: Call<LoginSuccessResponse>, t: Throwable) {
