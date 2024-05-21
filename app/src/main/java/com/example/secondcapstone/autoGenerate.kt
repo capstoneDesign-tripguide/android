@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import com.google.gson.Gson
 import okhttp3.Callback
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -28,37 +29,48 @@ class autoGenerate : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.auto_generate)
         val dateList = intent.getStringArrayListExtra("dateList") //Calendar에서 받은 날짜
-        Log.d("secondList", "$dateList")
+        val how_long_user_travel = intent.getIntExtra("how_long_user_travel", -1)
+
 
         //이 리스트의 내용을 서버로 넘겨주면 된다.
         var taglist = mutableListOf<String>()  //var 리스트니까 mutableListOf로 선언
 
+
         val addBtn = findViewById<Button>(R.id.nextBtn)
         addBtn.setOnClickListener {
-            Log.d("taglist", "taglist is $taglist")
-//            val retrofit = Retrofit.Builder()
-//                .baseUrl("https://my.url/")
-//                .addConverterFactory(GsonConverterFactory.create())
-//                .build()
-//
-//            val apiService = retrofit.create(retroTaglist::class.java)
-//            val call = apiService.sendTagList(taglist)
-//            call.enqueue(object : retrofit2.Callback<retroTaglistResponse> {
-//                override fun onResponse(call: Call<retroTaglistResponse>, response: Response<retroTaglistResponse>) {
-//                    if (response.isSuccessful) {
-//                        // 성공적으로 서버에 데이터가 전송됐을 때 처리
-//                        Log.d("communication", "Success")
-//                    } else {
-//                        // 서버 에러 처리
-//                        Log.e("communication", "Failed with response code: ${response.code()}")
-//                    }
-//                }
-//
-//                override fun onFailure(call: Call<retroTaglistResponse>, t: Throwable) {
-//                    // 통신 실패 시 처리
-//                    Log.e("communication", "Error: ${t.message}")
-//                }
-//            })
+            val planDto = planDto(
+                tags = taglist,
+                day = how_long_user_travel,
+                place = place.selected_place
+            )
+
+            val retrofit = Retrofit.Builder()
+                .baseUrl("http://aws-v5-beanstalk-env.eba-vu3h7itj.ap-northeast-2.elasticbeanstalk.com")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+            val json = Gson().toJson(planDto)
+            Log.d("jsonPayload", json)
+
+            val apiService = retrofit.create(retroTaglist::class.java)
+            val call = apiService.sendPlan(planDto)
+            call.enqueue(object : retrofit2.Callback<retroTaglistResponse> {
+                override fun onResponse(call: Call<retroTaglistResponse>, response: Response<retroTaglistResponse>) {
+                    if (response.isSuccessful) {
+                        // 성공적으로 서버에 데이터가 전송됐을 때 처리
+                        Log.d("communication", "Success")
+                        Log.d("communication", "$response")
+                    } else {
+                        // 서버 에러 처리
+                        Log.e("communication", "Failed with response code: ${response.code()}")
+                        Log.d("communication", "$response")
+                    }
+                }
+
+                override fun onFailure(call: Call<retroTaglistResponse>, t: Throwable) {
+                    // 통신 실패 시 처리
+                    Log.e("communication", "Error: ${t.message}")
+                }
+            })
 
 
             if (planMode.Manual == true) { // 수동 모드면 plan_list.kt로
@@ -71,16 +83,29 @@ class autoGenerate : AppCompatActivity() {
                 var intent = Intent(this, edit_plan_list::class.java)
                 // ArrayList<ArrayList<String>?> 타입의 finalTravelList 선언
                 var finalTravelList = ArrayList<ArrayList<String>?>()
+                if (planMode.Manual == true){
+                    // 첫 번째 서브 리스트 생성 및 값 할당
+                    val travelSubList1 = arrayListOf("남산 공원", "몽탄", "전쟁기념관", "북촌육경", "오다리집 간장게장")
 
-                // 첫 번째 서브 리스트 생성 및 값 할당
-                val travelSubList1 = arrayListOf("남산 공원", "몽탄", "전쟁기념관", "북촌육경", "오다리집 간장게장")
+                    // 두 번째 서브 리스트 생성 및 값 할당
+                    val travelSubList2 = arrayListOf("목면상방 남산타워점", "남산 자물쇠", "N 서울타워")
 
-                // 두 번째 서브 리스트 생성 및 값 할당
-                val travelSubList2 = arrayListOf("목면상방 남산타워점", "남산 자물쇠", "N 서울타워")
+                    // 서브 리스트를 finalTravelList에 추가
+                    finalTravelList.add(travelSubList1)
+                    finalTravelList.add(travelSubList2)
+                }
+                else if (planMode.Automatic == true){
+                    // 첫 번째 서브 리스트 생성 및 값 할당
+                    val travelSubList1 = arrayListOf("송도 센트럴파크 호텔", "송도 센트럴파크", "G타워", "송도 한옥마을")
 
-                // 서브 리스트를 finalTravelList에 추가
-                finalTravelList.add(travelSubList1)
-                finalTravelList.add(travelSubList2)
+                    // 두 번째 서브 리스트 생성 및 값 할당
+                    val travelSubList2 = arrayListOf("인천 대공원", "부원 농원", "인천 대공원 장미원")
+
+                    // 서브 리스트를 finalTravelList에 추가
+                    finalTravelList.add(travelSubList1)
+                    finalTravelList.add(travelSubList2)
+                }
+
                 Log.d("final","in auto, $finalTravelList")
 
 
@@ -95,13 +120,6 @@ class autoGenerate : AppCompatActivity() {
 //            finish()
         }
         val tag = findViewById<EditText>(R.id.tag)
-
-
-
-
-
-
-
 
         val parentLayout = findViewById<LinearLayout>(R.id.tag_layout)
 

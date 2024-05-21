@@ -5,6 +5,6 @@ import retrofit2.http.Body
 import retrofit2.http.POST
 
 interface retroTaglist {
-    @POST("") //endpoint
-    fun sendTagList(@Body tagList: List<String>): Call<retroTaglistResponse>
+    @POST("/plan") //endpoint
+    fun sendPlan(@Body plan: planDto): Call<retroTaglistResponse>
 }

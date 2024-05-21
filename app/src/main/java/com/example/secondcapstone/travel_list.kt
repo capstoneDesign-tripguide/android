@@ -37,9 +37,9 @@ class travel_list : AppCompatActivity(), travel_adapter.OnItemClickListener {
         itemList.add(travel_items("경복궁", "4.9"))
         itemList.add(travel_items("창덕궁", "4.8"))
         itemList.add(travel_items("인사동", "3.9"))
-        itemList.add(travel_items("여행지9", "별점9"))
-        itemList.add(travel_items("여행지10", "별점10"))
-        itemList.add(travel_items("여행지11", "별점11"))
+        itemList.add(travel_items("서울역", "4.5"))
+        itemList.add(travel_items("남대문 시장", "4.2"))
+        itemList.add(travel_items("명동", "4.7"))
         itemList.add(travel_items("여행지12", "별점12"))
 
         val rc_adapter = travel_adapter(itemList, this) //어댑터 생성. 데이터 연결

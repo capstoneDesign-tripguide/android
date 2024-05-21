@@ -29,10 +29,12 @@ import com.prolificinteractive.materialcalendarview.format.TitleFormatter
 import java.security.AccessController.getContext
 import java.util.Calendar
 import org.threeten.bp.DayOfWeek
+import org.threeten.bp.temporal.ChronoUnit
 
 class calendar : AppCompatActivity() {
     //lateinit은 전역 변수 느낌
     private lateinit var dateList: List<String>
+    private var how_long_user_travel: Int = -1
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.calendar)
@@ -71,18 +73,32 @@ class calendar : AppCompatActivity() {
         var endDay: String? = null
         calendarView.setOnRangeSelectedListener(object : OnRangeSelectedListener {
             override fun onRangeSelected(widget: MaterialCalendarView, dates: List<CalendarDay>) {
-                //dates 리스트는 이런식으로 생김: [CalendarDay{2024-3-20}, CalendarDay{2024-3-21}]
-                startDay = dates[0].date.toString()
-                endDay = dates[dates.size - 1].date.toString()
-//                Log.e(ContentValues.TAG, "시작일 : $startDay, 종료일 : $endDay")
-//                Log.e(ContentValues.TAG, "$dates[0]")
-//                Log.d(ContentValues.TAG, "$dates")
+//                //dates 리스트는 이런식으로 생김: [CalendarDay{2024-3-20}, CalendarDay{2024-3-21}]
+//                startDay = dates[0].date.toString()
+//                endDay = dates[dates.size - 1].date.toString()
+////                Log.e(ContentValues.TAG, "시작일 : $startDay, 종료일 : $endDay")
+////                Log.e(ContentValues.TAG, "$dates[0]")
+////                Log.d(ContentValues.TAG, "$dates")
+//
+//                //리스트의 각 요소는 연도-월-일 순으로 나오는데, 연도는 제외하고 싶음
+//                //따라서 연도(4)와 첫 '-'을 뺴기 위해 substring(5) 사용
+//                dateList = dates.map { it.date.toString().substring(5) }.toList()
+//                Log.d(ContentValues.TAG, "$dateList")
+//                travelDate.text = "출발일: ${startDay}\n 도착일: ${endDay}"
 
-                //리스트의 각 요소는 연도-월-일 순으로 나오는데, 연도는 제외하고 싶음
-                //따라서 연도(4)와 첫 '-'을 뺴기 위해 substring(5) 사용
-                dateList = dates.map { it.date.toString().substring(5) }.toList()
-                Log.d(ContentValues.TAG, "$dateList")
-                travelDate.text = "출발일: ${startDay}\n 도착일: ${endDay}"
+                if (dates.isNotEmpty()) {
+                    startDay = dates[0].date.toString()
+                    endDay = dates[dates.size - 1].date.toString()
+
+                    dateList = dates.map { it.date.toString().substring(5) }.toList()
+                    travelDate.text = "출발일: ${startDay}\n 도착일: ${endDay}"
+
+                    // 선택된 날짜 범위의 일수를 계산
+                    val startDate = dates.first().date
+                    val endDate = dates.last().date
+                    how_long_user_travel = ChronoUnit.DAYS.between(startDate, endDate).toInt() + 1
+                    Log.d("how_long_user_travel", "여행 기간: $how_long_user_travel 일")
+                }
             }
         })
 
@@ -112,8 +128,9 @@ class calendar : AppCompatActivity() {
                 //list라서 putStringArrayListExtra 함수를 사용하고, ArrayList함수로 변형해서 전달해야 함
                 //받을때도 getStringArrayListExtra 함수 사용
                 intent.putStringArrayListExtra("dateList",ArrayList(dateList))
+                intent.putExtra("how_long_user_travel", how_long_user_travel)
                 startActivity(intent)
-                finish()}
+                finish() }
             else{
                 Toast.makeText(this, "날짜를 선택해주세요.", Toast.LENGTH_LONG).show()
             }
