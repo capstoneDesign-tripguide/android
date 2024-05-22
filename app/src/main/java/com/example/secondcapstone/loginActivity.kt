@@ -32,11 +32,14 @@ import com.navercorp.nid.oauth.NidOAuthLogin
 import com.navercorp.nid.profile.NidProfileCallback
 import com.navercorp.nid.profile.data.NidProfileMap
 import com.navercorp.nid.profile.data.NidProfileResponse
+import okhttp3.OkHttpClient
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 
 class loginActivity : AppCompatActivity() {
     private lateinit var binding: LoginActivityBinding
@@ -138,6 +141,48 @@ class loginActivity : AppCompatActivity() {
         //**************************************
         //로그인 성공 시에만 적용하도록 수정해야 함
         //**************************************
+            // OkHttpClient 설정
+            val okHttpClient = OkHttpClient.Builder()
+                .connectTimeout(120, TimeUnit.SECONDS) // 연결 타임아웃 설정
+                .writeTimeout(120, TimeUnit.SECONDS)   // 쓰기 타임아웃 설정
+                .readTimeout(120, TimeUnit.SECONDS)    // 읽기 타임아웃 설정
+                .build()
+
+            val retrofit = Retrofit.Builder()
+                .baseUrl("http://aws-v5-beanstalk-env.eba-vu3h7itj.ap-northeast-2.elasticbeanstalk.com")
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(okHttpClient) // OkHttpClient를 Retrofit에 추가
+                .build()
+
+            val apiService = retrofit.create(retroTaglist::class.java)
+            val informationOf_Login = informationOf_login(
+                editText_id.toString(), editText_pw.toString()
+            )
+            val call = apiService.sendLogin(informationOf_Login)
+            call.enqueue(object: retrofit2.Callback<ResponseBody>{
+                override fun onResponse(
+                    call: Call<ResponseBody>,
+                    response: Response<ResponseBody>
+                ) {
+                    if (response.isSuccessful) {
+                        //성공 시
+                        Log.d("login0522", "success")
+                        Log.d("login0522", "$response")
+                        Log.d("login0522", "${response.body()?.toString()}")
+                    }
+                    else{
+                        Log.d("login0522", "failed")
+                        Log.d("login0522", "$call")
+                        Log.d("login0522", "${response.body()?.toString()}")
+                    }
+                }
+
+                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                    Log.e("login0522", "Error: ${t.message}")
+                }
+
+            }
+            )
             isLogin.isLogin = true
             finish()
         }

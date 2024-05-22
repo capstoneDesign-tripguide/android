@@ -18,6 +18,7 @@ import com.google.gson.Gson
 import okhttp3.Callback
 import okhttp3.OkHttpClient
 import okhttp3.ResponseBody
+import org.json.JSONArray
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.Retrofit
@@ -26,12 +27,14 @@ import java.io.Serializable
 import java.util.concurrent.TimeUnit
 
 class autoGenerate : AppCompatActivity() {
-
+    var how_long_user_tarvel:Int = -1
+    private var jsonArray: JSONArray = JSONArray()
+    private var finalTravelList = ArrayList<ArrayList<String>?>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.auto_generate)
         val dateList = intent.getStringArrayListExtra("dateList") //Calendar에서 받은 날짜
-        val how_long_user_travel = intent.getIntExtra("how_long_user_travel", -1)
+        how_long_user_tarvel = intent.getIntExtra("how_long_user_travel", -1)
 
 
         //이 리스트의 내용을 서버로 넘겨주면 된다.
@@ -42,7 +45,7 @@ class autoGenerate : AppCompatActivity() {
         addBtn.setOnClickListener {
             val planDto = planDto(
                 tags = taglist,
-                day = how_long_user_travel,
+                day = how_long_user_tarvel,
                 place = place.selected_place
             )
 
@@ -70,6 +73,12 @@ class autoGenerate : AppCompatActivity() {
                         Log.d("communication", "Success")
                         Log.d("communication", "$response")
                         Log.d("communication", "${response.body()?.toString()}")
+
+
+                        val jsonString = response.body()?.example.toString().trimIndent()//trimIndent는 들여쓰기를 제거함
+                        jsonArray = JSONArray(jsonString)
+
+
                     } else {
                         // 서버 에러 처리
                         Log.e("communication", "Failed with response code: ${response.code()}")
@@ -83,17 +92,18 @@ class autoGenerate : AppCompatActivity() {
                 }
             })
 
-
             if (planMode.Manual == true) { // 수동 모드면 plan_list.kt로
                 var intent = Intent(this, plan_list::class.java)
                 intent.putStringArrayListExtra("dateList", ArrayList(dateList))
                 startActivity(intent)
                 finish()
             }
-            else { //자동 모드면 바로 map.kt로
+            else { //자동 모드면 바로 edit_plan.kt로
                 var intent = Intent(this, edit_plan_list::class.java)
                 // ArrayList<ArrayList<String>?> 타입의 finalTravelList 선언
-                var finalTravelList = ArrayList<ArrayList<String>?>()
+
+
+                makePlanList(jsonArray)
                 if (planMode.Manual == true){
                     // 첫 번째 서브 리스트 생성 및 값 할당
                     val travelSubList1 = arrayListOf("남산 공원", "몽탄", "전쟁기념관", "북촌육경", "오다리집 간장게장")
@@ -212,5 +222,35 @@ class autoGenerate : AppCompatActivity() {
                 drawerLayout.openDrawer(GravityCompat.END)
             }
         }
+    }
+
+    private fun makePlanList(jsonArray: JSONArray){
+        if (how_long_user_tarvel > 0) { //여행 일수가 양수일 때만 실행
+            for (i in 0 until how_long_user_tarvel){
+                val jsonObject = jsonArray.getJSONObject(i) //i번째 인덱스
+                var tmpTravelList = ArrayList<String>()
+
+                // rating 값 가져오기
+                val rating = jsonObject.getDouble("rating") //rating is 4.1
+
+                // location의 latitude 값 가져오기
+                val latitude = jsonObject.getJSONObject("location").getDouble("latitude") //latitude is 37.5472477
+
+                // location의 longitude 값 가져오기
+                val longitude = jsonObject.getJSONObject("location").getDouble("longitude") //longitude is 127.0394561
+                // displayName의 text 값 가져오기
+                val displayName = jsonObject.getJSONObject("displayName").getString("text") //Name is 라프레플루트
+
+                //데이터 클래스 생성
+                val tmp_informationOf_place = informationOf_place(displayName, rating, longitude, latitude)
+
+
+            }
+
+
+
+
+        }
+        return
     }
 }

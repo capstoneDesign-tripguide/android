@@ -18,7 +18,16 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
+import com.google.gson.Gson
+import okhttp3.OkHttpClient
+import okhttp3.ResponseBody
+import org.json.JSONArray
+import retrofit2.Call
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import java.util.Calendar
+import java.util.concurrent.TimeUnit
 
 class signUp : AppCompatActivity() {
 
@@ -132,6 +141,7 @@ class signUp : AppCompatActivity() {
             val EMAIL = input_email.text.toString()
             Log.d("test0130", "${ID}, ${PASSWORD}, ${CHECK_PASSWORD}, ${NAME}, ${NICKNAME}, ${EMAIL}")
 
+
             if (ID == "") {
                 Log.d("test0130", "ID is empty.")
                 alarm.text = "아이디를 입력해 주세요."
@@ -169,8 +179,51 @@ class signUp : AppCompatActivity() {
                 Log.d("test0130", "good")
 
                 //데이터 클래스로 만들어서 서버로 보내기
-                val SignupDAta = SignupData(ID, PASSWORD, NAME)
                 Toast.makeText(this, "회원 가입이 완료됐습니다.", Toast.LENGTH_SHORT).show()
+                val informationOf_signup = informationOf_signup( //데이터 클래스 생성
+                    ID, PASSWORD, EMAIL, NICKNAME
+                )
+                // OkHttpClient 설정
+                val okHttpClient = OkHttpClient.Builder()
+                    .connectTimeout(120, TimeUnit.SECONDS) // 연결 타임아웃 설정
+                    .writeTimeout(120, TimeUnit.SECONDS)   // 쓰기 타임아웃 설정
+                    .readTimeout(120, TimeUnit.SECONDS)    // 읽기 타임아웃 설정
+                    .build()
+
+                val retrofit = Retrofit.Builder()
+                    .baseUrl("http://aws-v5-beanstalk-env.eba-vu3h7itj.ap-northeast-2.elasticbeanstalk.com")
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .client(okHttpClient) // OkHttpClient를 Retrofit에 추가
+                    .build()
+
+                val apiService = retrofit.create(retroTaglist::class.java)
+                val call = apiService.sendSignUP(informationOf_signup)
+                call.enqueue(object: retrofit2.Callback<ResponseBody>{
+                    override fun onResponse(
+                        call: Call<ResponseBody>,
+                        response: Response<ResponseBody>
+                    ) {
+                        if (response.isSuccessful) {
+                            //성공 시
+                            Log.d("signup", "success")
+                            Log.d("signup", "$response")
+                            Log.d("signup", "${response.body()?.toString()}")
+                        }
+                        else{
+                            Log.d("signup", "failed")
+                            Log.d("signup", "$call")
+                            Log.d("signup", "${response.body()?.toString()}")
+                        }
+
+
+                    }
+
+                    override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                        Log.e("signup", "Error: ${t.message}")
+                    }
+
+                })
+
                 finish()
             }
 
