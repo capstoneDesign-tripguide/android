@@ -16,12 +16,14 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.gson.Gson
 import okhttp3.Callback
+import okhttp3.OkHttpClient
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.Serializable
+import java.util.concurrent.TimeUnit
 
 class autoGenerate : AppCompatActivity() {
 
@@ -44,9 +46,17 @@ class autoGenerate : AppCompatActivity() {
                 place = place.selected_place
             )
 
+            // OkHttpClient 설정
+            val okHttpClient = OkHttpClient.Builder()
+                .connectTimeout(120, TimeUnit.SECONDS) // 연결 타임아웃 설정
+                .writeTimeout(120, TimeUnit.SECONDS)   // 쓰기 타임아웃 설정
+                .readTimeout(120, TimeUnit.SECONDS)    // 읽기 타임아웃 설정
+                .build()
+
             val retrofit = Retrofit.Builder()
                 .baseUrl("http://aws-v5-beanstalk-env.eba-vu3h7itj.ap-northeast-2.elasticbeanstalk.com")
                 .addConverterFactory(GsonConverterFactory.create())
+                .client(okHttpClient) // OkHttpClient를 Retrofit에 추가
                 .build()
             val json = Gson().toJson(planDto)
             Log.d("jsonPayload", json)
@@ -59,6 +69,7 @@ class autoGenerate : AppCompatActivity() {
                         // 성공적으로 서버에 데이터가 전송됐을 때 처리
                         Log.d("communication", "Success")
                         Log.d("communication", "$response")
+                        Log.d("communication", "${response.body()?.toString()}")
                     } else {
                         // 서버 에러 처리
                         Log.e("communication", "Failed with response code: ${response.code()}")
