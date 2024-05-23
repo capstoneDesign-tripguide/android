@@ -15,6 +15,10 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.gson.Gson
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okhttp3.Callback
 import okhttp3.OkHttpClient
 import okhttp3.ResponseBody
@@ -25,6 +29,9 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.Serializable
 import java.util.concurrent.TimeUnit
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 class autoGenerate : AppCompatActivity() {
     var how_long_user_tarvel:Int = -1
@@ -61,36 +68,43 @@ class autoGenerate : AppCompatActivity() {
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(okHttpClient) // OkHttpClient를 Retrofit에 추가
                 .build()
+
             val json = Gson().toJson(planDto)
             Log.d("jsonPayload", json)
 
             val apiService = retrofit.create(retroTaglist::class.java)
-            val call = apiService.sendPlan(planDto)
-            call.enqueue(object : retrofit2.Callback<retroTaglistResponse> {
-                override fun onResponse(call: Call<retroTaglistResponse>, response: Response<retroTaglistResponse>) {
-                    if (response.isSuccessful) {
-                        // 성공적으로 서버에 데이터가 전송됐을 때 처리
+            CoroutineScope(Dispatchers.Main).launch {
+                try {
+                    val response = sendPlanAsync(apiService, planDto)
+                    if (response != null) {
                         Log.d("communication", "Success")
                         Log.d("communication", "$response")
-                        Log.d("communication", "${response.body()?.toString()}")
+                        Log.d("communication", "${response.toString()}")
 
-
-                        val jsonString = response.body()?.example.toString().trimIndent()//trimIndent는 들여쓰기를 제거함
+                        val jsonString = response.example.toString().trimIndent()
                         jsonArray = JSONArray(jsonString)
+                        Log.d("placeList", "$jsonArray")
 
+                        makePlanList(jsonArray)
 
+                        if (planMode.Manual) {
+                            val intent = Intent(this@autoGenerate, plan_list::class.java)
+                            intent.putStringArrayListExtra("dateList", ArrayList(dateList))
+                            startActivity(intent)
+                            finish()
+                        } else {
+                            //val intent = Intent(this@autoGenerate, edit_plan_list::class.java)
+                            //intent.putExtra("listKey", finalTravelList as Serializable)
+                            //startActivity(intent)
+                            //finish()
+                        }
                     } else {
-                        // 서버 에러 처리
-                        Log.e("communication", "Failed with response code: ${response.code()}")
-                        Log.d("communication", "$response")
+                        Log.e("communication", "Failed with response code: ${response}")
                     }
+                } catch (e: Exception) {
+                    Log.e("communication", "Error: ${e.message}")
                 }
-
-                override fun onFailure(call: Call<retroTaglistResponse>, t: Throwable) {
-                    // 통신 실패 시 처리
-                    Log.e("communication", "Error: ${t.message}")
-                }
-            })
+            }
 
             if (planMode.Manual == true) { // 수동 모드면 plan_list.kt로
                 var intent = Intent(this, plan_list::class.java)
@@ -102,37 +116,12 @@ class autoGenerate : AppCompatActivity() {
                 var intent = Intent(this, edit_plan_list::class.java)
                 // ArrayList<ArrayList<String>?> 타입의 finalTravelList 선언
 
-
-                makePlanList(jsonArray)
-                if (planMode.Manual == true){
-                    // 첫 번째 서브 리스트 생성 및 값 할당
-                    val travelSubList1 = arrayListOf("남산 공원", "몽탄", "전쟁기념관", "북촌육경", "오다리집 간장게장")
-
-                    // 두 번째 서브 리스트 생성 및 값 할당
-                    val travelSubList2 = arrayListOf("목면상방 남산타워점", "남산 자물쇠", "N 서울타워")
-
-                    // 서브 리스트를 finalTravelList에 추가
-                    finalTravelList.add(travelSubList1)
-                    finalTravelList.add(travelSubList2)
-                }
-                else if (planMode.Automatic == true){
-                    // 첫 번째 서브 리스트 생성 및 값 할당
-                    val travelSubList1 = arrayListOf("송도 센트럴파크 호텔", "송도 센트럴파크", "G타워", "송도 한옥마을")
-
-                    // 두 번째 서브 리스트 생성 및 값 할당
-                    val travelSubList2 = arrayListOf("인천 대공원", "부원 농원", "인천 대공원 장미원")
-
-                    // 서브 리스트를 finalTravelList에 추가
-                    finalTravelList.add(travelSubList1)
-                    finalTravelList.add(travelSubList2)
-                }
-
                 Log.d("final","in auto, $finalTravelList")
 
 
                 intent.putExtra("listKey", finalTravelList as Serializable)
-                startActivity(intent)
-                finish()
+                //startActivity(intent)
+                //finish()
             }
 //
 //            var intent = Intent(this, plan_list::class.java)
@@ -225,27 +214,31 @@ class autoGenerate : AppCompatActivity() {
     }
 
     private fun makePlanList(jsonArray: JSONArray){
+        Log.d("placeList", "Called makePlanList")
         if (how_long_user_tarvel > 0) { //여행 일수가 양수일 때만 실행
-            for (i in 0 until how_long_user_tarvel){
-                val jsonObject = jsonArray.getJSONObject(i) //i번째 인덱스
-                var tmpTravelList = ArrayList<String>()
+            val placesList = mutableListOf<List<informationOf_place>>()
+            Log.d("placeList", "if OK")
+            // Iterate over the JSON array
+            for (i in 0 until jsonArray.length()) {
+                val innerArray = jsonArray.getJSONArray(i)
+                val innerPlacesList = mutableListOf<informationOf_place>()
 
-                // rating 값 가져오기
-                val rating = jsonObject.getDouble("rating") //rating is 4.1
+                for (j in 0 until innerArray.length()) {
+                    val jsonObject = innerArray.getJSONObject(j)
+                    val displayName = jsonObject.getJSONObject("displayName").getString("text")
+                    val rating = jsonObject.getDouble("rating")
+                    val location = jsonObject.getJSONObject("location")
+                    val latitude = location.getDouble("latitude")
+                    val longitude = location.getDouble("longitude")
 
-                // location의 latitude 값 가져오기
-                val latitude = jsonObject.getJSONObject("location").getDouble("latitude") //latitude is 37.5472477
-
-                // location의 longitude 값 가져오기
-                val longitude = jsonObject.getJSONObject("location").getDouble("longitude") //longitude is 127.0394561
-                // displayName의 text 값 가져오기
-                val displayName = jsonObject.getJSONObject("displayName").getString("text") //Name is 라프레플루트
-
-                //데이터 클래스 생성
-                val tmp_informationOf_place = informationOf_place(displayName, rating, longitude, latitude)
-
-
+                    // Create an informationOf_place object and add it to the inner list
+                    val place = informationOf_place(displayName, rating, latitude, longitude)
+                    innerPlacesList.add(place) //i일차 informationOf_place들이 저장된 리스트
+                }
+                // Add the inner list to the main list
+                placesList.add(innerPlacesList) //이제 placesList[i]는 i일자 리스트
             }
+            Log.d("placeList", "$placesList")
 
 
 
@@ -253,4 +246,31 @@ class autoGenerate : AppCompatActivity() {
         }
         return
     }
+    private suspend fun sendPlanAsync(apiService: retroTaglist, planDto: planDto): retroTaglistResponse? =
+        withContext(Dispatchers.IO) {
+            try {
+                val call = apiService.sendPlan(planDto)
+                return@withContext suspendCoroutine { cont ->
+                    call.enqueue(object : retrofit2.Callback<retroTaglistResponse> {
+                        override fun onResponse(
+                            call: Call<retroTaglistResponse>,
+                            response: Response<retroTaglistResponse>
+                        ) {
+                            if (response.isSuccessful) {
+                                cont.resume(response.body())
+                            } else {
+                                cont.resume(null)
+                            }
+                        }
+
+                        override fun onFailure(call: Call<retroTaglistResponse>, t: Throwable) {
+                            cont.resumeWithException(t)
+                        }
+                    })
+                }
+            } catch (e: Exception) {
+                Log.e("communication", "Error: ${e.message}")
+                null
+            }
+        }
 }

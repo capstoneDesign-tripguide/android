@@ -5,5 +5,4 @@ data class informationOf_place(
     val rating: Double,
     val latitude: Double,
     val longitude: Double,
-
 )
