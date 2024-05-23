@@ -36,6 +36,7 @@ import kotlin.coroutines.suspendCoroutine
 class autoGenerate : AppCompatActivity() {
     var how_long_user_tarvel:Int = -1
     private var jsonArray: JSONArray = JSONArray()
+    private var placesList = mutableListOf<List<informationOf_place>>()
     private var finalTravelList = ArrayList<ArrayList<String>?>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,16 +87,27 @@ class autoGenerate : AppCompatActivity() {
                         Log.d("placeList", "$jsonArray")
 
                         makePlanList(jsonArray)
-
-                        if (planMode.Manual) {
-                            val intent = Intent(this@autoGenerate, plan_list::class.java)
-                            intent.putStringArrayListExtra("dateList", ArrayList(dateList))
+                        if (planMode.Manual == true) { // 수동 모드면 plan_list.kt로
+                            var intent = Intent(this@autoGenerate, plan_list::class.java)
                             startActivity(intent)
                             finish()
-                        } else {
-                            //val intent = Intent(this@autoGenerate, edit_plan_list::class.java)
-                            //intent.putExtra("listKey", finalTravelList as Serializable)
-                            //startActivity(intent)
+                        }
+                        else { //자동 모드면 바로 edit_plan.kt로
+                            var intent = Intent(this@autoGenerate, edit_plan_list::class.java)
+
+                            for (i in placesList.indices) { // MutableList<List<informationOf_place>>를 인덱스 단위로 put
+                                val innerList = placesList[i]
+                                val parcelableArray = innerList.toTypedArray()
+                                intent.putExtra("placesList_$i", parcelableArray)
+                            }
+                            intent.putExtra("listSize", placesList.size)
+
+                            // ArrayList<ArrayList<String>?> 타입의 finalTravelList 선언
+                            Log.d("final","in auto, $finalTravelList")
+
+
+                            intent.putExtra("listKey", finalTravelList as Serializable)
+                            startActivity(intent)
                             //finish()
                         }
                     } else {
@@ -106,29 +118,9 @@ class autoGenerate : AppCompatActivity() {
                 }
             }
 
-            if (planMode.Manual == true) { // 수동 모드면 plan_list.kt로
-                var intent = Intent(this, plan_list::class.java)
-                intent.putStringArrayListExtra("dateList", ArrayList(dateList))
-                startActivity(intent)
-                finish()
-            }
-            else { //자동 모드면 바로 edit_plan.kt로
-                var intent = Intent(this, edit_plan_list::class.java)
-                // ArrayList<ArrayList<String>?> 타입의 finalTravelList 선언
 
-                Log.d("final","in auto, $finalTravelList")
-
-
-                intent.putExtra("listKey", finalTravelList as Serializable)
-                //startActivity(intent)
-                //finish()
-            }
-//
-//            var intent = Intent(this, plan_list::class.java)
-//            intent.putStringArrayListExtra("dateList", ArrayList(dateList))
-//            startActivity(intent)
-//            finish()
         }
+
         val tag = findViewById<EditText>(R.id.tag)
 
         val parentLayout = findViewById<LinearLayout>(R.id.tag_layout)
@@ -216,7 +208,7 @@ class autoGenerate : AppCompatActivity() {
     private fun makePlanList(jsonArray: JSONArray){
         Log.d("placeList", "Called makePlanList")
         if (how_long_user_tarvel > 0) { //여행 일수가 양수일 때만 실행
-            val placesList = mutableListOf<List<informationOf_place>>()
+            placesList = mutableListOf<List<informationOf_place>>()
             Log.d("placeList", "if OK")
             // Iterate over the JSON array
             for (i in 0 until jsonArray.length()) {
@@ -239,10 +231,6 @@ class autoGenerate : AppCompatActivity() {
                 placesList.add(innerPlacesList) //이제 placesList[i]는 i일자 리스트
             }
             Log.d("placeList", "$placesList")
-
-
-
-
         }
         return
     }
