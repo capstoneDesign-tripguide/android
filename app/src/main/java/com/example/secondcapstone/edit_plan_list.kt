@@ -57,6 +57,12 @@ class edit_plan_list : AppCompatActivity() {
         val goToMapButton = findViewById<Button>(R.id.go_to_map)
         goToMapButton.setOnClickListener {
             val intent = Intent(this, map::class.java)
+            for (i in finalTravelList.indices) { // MutableList<List<informationOf_place>>를 인덱스 단위로 put
+                val innerList = finalTravelList[i]
+                val parcelableArray = innerList.toTypedArray()
+                intent.putExtra("placesList_$i", parcelableArray)
+            }
+            intent.putExtra("listSize", finalTravelList.size)
             startActivity(intent)
         }
 

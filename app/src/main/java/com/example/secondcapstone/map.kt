@@ -66,8 +66,9 @@ data class Place(val id: String, val location: Location, val rating: Double, val
 
 internal class map : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 //    private lateinit var places: List<Place>
-    private lateinit var places: List<List<Place>>
+
     private var global_index: Int = -1
+    private var places = mutableListOf<List<informationOf_place>>()
     companion object {
         const val TAG = "MapActivity"
     }
@@ -99,46 +100,17 @@ internal class map : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         binding = ActivityMapBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val finalTravelList =
-            intent.getSerializableExtra("listKey") as? ArrayList<ArrayList<String>?> //serializable을 ArrayList로 받음
-        Log.d("map.kt", "$finalTravelList")
-        //        val pt_jsonString = File("C:\Users\yeoyeoungkyu\Desktop\secondCapstone\app\src\main\res\raw\sample.json").readText()
-        /*        res/raw 디렉토리의 파일은 앱의 리소스로 패키지화되어 디바이스에 설치될 때
-                  압축되어 저장되므로 File 모듈로 읽어올 수 없다고 한다
-                  따라서 밑과 같이 inputStream을 이용해야 함 (자바와 안드로이드에서 데이터를 바이트 단위로 읽어오는 데 사용되는 클래스)
-        */
-
-        if (planMode.Manual == true){
-            val inputStream: InputStream = resources.openRawResource(R.raw.sample)
-            val jsonString = inputStream.bufferedReader().use { it.readText() }
-            Log.d("json", "$jsonString")
-
-
-            val listType = object : TypeToken<List<Place>>() {}.type
-//        places = Gson().fromJson(jsonString, listType) //jsonString을 리스트로 바꿈. onMapReady()에서 마커 추가하는데 사용
-            val type: Type = object : TypeToken<List<List<Place>>>() {}.type
-            places = Gson().fromJson(jsonString, type)
-            Log.d("mode", "$places")
+        val listSize = intent.getIntExtra("listSize", 0)
+        for (i in 0 until listSize) {
+            val parcelableArray = intent.getParcelableArrayExtra("placesList_$i")
+            val innerList = parcelableArray?.map { it as informationOf_place } ?: listOf()
+            places.add(innerList)
         }
-        else if (planMode.Automatic == true){
-            val inputStream: InputStream = resources.openRawResource(R.raw.sample2)
-            val jsonString = inputStream.bufferedReader().use { it.readText() }
-            Log.d("json", "$jsonString")
-
-
-            val listType = object : TypeToken<List<Place>>() {}.type
-//        places = Gson().fromJson(jsonString, listType) //jsonString을 리스트로 바꿈. onMapReady()에서 마커 추가하는데 사용
-            val type: Type = object : TypeToken<List<List<Place>>>() {}.type
-            places = Gson().fromJson(jsonString, type)
-            Log.d("mode", "$places")
-        }
-
 
         this.mapView = binding.mapView
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync(this@map)
-        Log.d("0406", "$finalTravelList before called")
-        createBtn(finalTravelList)
+        createBtn(places)
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -155,12 +127,8 @@ internal class map : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         //처음 Map Ready 시 1일차 마커 생성
         for(place in places[0]) {
             currentMarker = setupMarker(
-                LatLngEntity(place.location.latitude, place.location.longitude),
-                place.displayName.text
-            )
-            Log.d(
-                "json",
-                "latitud: ${place.location.latitude}, langitude: ${place.location.longitude}"
+                LatLngEntity(place.latitude, place.longitude),
+                place.displayName
             )
             currentMarker?.showInfoWindow()
 
@@ -190,12 +158,12 @@ internal class map : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
     }
     override fun onMarkerClick(marker: Marker): Boolean {
-        Log.d("marker", "clicked.")
+
 
         val place = findPlaceByMarker(marker)
         if (place != null) {
-            val message = "이름: ${place.displayName.text}\n별점: ${place.rating}"
-            showAlertDialog(place.displayName.text, place.rating)
+            val message = "이름: ${place.displayName}\n별점: ${place.rating}"
+            showAlertDialog(place.displayName, place.rating)
         }
         return false
 
@@ -234,10 +202,10 @@ internal class map : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     }
 
     // 마커와 연결된 place를 찾는 함수
-    private fun findPlaceByMarker(marker: Marker): Place? {
+    private fun findPlaceByMarker(marker: Marker): informationOf_place? {
         if(global_index > -1) { //global_index가 전역 변수라 혹시나 생길 에러 방지
             for (place in places[global_index]) {
-                if (marker.position.latitude == place.location.latitude && marker.position.longitude == place.location.longitude) {
+                if (marker.position.latitude == place.latitude && marker.position.longitude == place.longitude) {
                     return place
                 }
             }
@@ -259,7 +227,7 @@ internal class map : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     }
 
     //여행 일자만큼 'n일차 마커 보기' 버튼 생성
-    private fun createBtn(finalTravelList: ArrayList<ArrayList<String>?>?) {
+    private fun createBtn(finalTravelList: MutableList<List<informationOf_place>>) {
         Log.d("0406", "$finalTravelList")
         val layout = findViewById<LinearLayout>(R.id.parent_linear)
 
@@ -271,7 +239,7 @@ internal class map : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                 setBackgroundResource(R.drawable.btn_repple_ex)
                 textSize = 20f
                 typeface = resources.getFont(R.font.jua_ttf)
-                setTextColor(ContextCompat.getColor(context, R.color.white)) // 여기에 원하는 텍스트 색상의 리소스 ID를 넣으세요
+                setTextColor(ContextCompat.getColor(context, R.color.white))
                 // LinearLayout.LayoutParams를 사용하여 마진 설정 가능
                 val layoutParams = LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
@@ -289,28 +257,14 @@ internal class map : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                 Log.d("0412", "start to clear currentPollyline")
 
                 clearPolylines() //기존 폴리 라인들 초기화
-
-
-//                currentPolyline?.remove() // 폴리라인 초기화
-//                Log.d("0412", "currentPollyline is removed. and is $currentPolyline")
-//
-//                currentPolyline = null // 폴리라인 초기화2
-//                Log.d("0412", "currentPollyline is deallocated. and is $currentPolyline")
-
-
-
                 //n일차 버튼 클릭 시 global_index를 n으로 설정, 각 n번째 마커 설정들 출동
 
                 global_index = index
                 if (global_index > -1){ //global_index가 전역 변수라 혹시나 생길 에러 방지
                     for (place in places[global_index]) {
                         currentMarker = setupMarker(
-                            LatLngEntity(place.location.latitude, place.location.longitude),
-                            place.displayName.text
-                        )
-                        Log.d(
-                            "json",
-                            "latitud: ${place.location.latitude}, langitude: ${place.location.longitude}"
+                            LatLngEntity(place.latitude, place.longitude),
+                            place.displayName
                         )
                         currentMarker?.showInfoWindow()
 
@@ -327,14 +281,12 @@ internal class map : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                 //places[global_index][1] ~ places[global_index][2]
 
                 for (i in 1 until (places[global_index].size)){
-                    var origin: LatLngEntity = LatLngEntity(places[global_index][i-1].location.latitude, places[global_index][i-1].location.longitude)
-                    var destination: LatLngEntity = LatLngEntity(places[global_index][i].location.latitude, places[global_index][i].location.longitude)
-                    //1일차, 2일차엔 로그 안 찍힘
-                    Log.d("0410","$origin")
-                    Log.d("0410","$destination")
-                    drawRoute(googleMap, origin, destination, "AIzaSyByXRkTKRM3O8P1Sq7fbI4I60UMVdovReg")               }
+                    var origin: LatLngEntity = LatLngEntity(places[global_index][i-1].latitude, places[global_index][i-1].longitude)
+                    var destination: LatLngEntity = LatLngEntity(places[global_index][i].latitude, places[global_index][i].longitude)
+
+                    drawRoute(googleMap, origin, destination, "AIzaSyByXRkTKRM3O8P1Sq7fbI4I60UMVdovReg")
+                }
             }
-            Log.d("0406", "add view.")
             layout.addView(button)
         }
     }
