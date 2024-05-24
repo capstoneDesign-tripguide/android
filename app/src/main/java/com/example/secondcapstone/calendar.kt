@@ -29,12 +29,16 @@ import com.prolificinteractive.materialcalendarview.format.TitleFormatter
 import java.security.AccessController.getContext
 import java.util.Calendar
 import org.threeten.bp.DayOfWeek
+import org.threeten.bp.LocalDate
+import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.temporal.ChronoUnit
 
+
 class calendar : AppCompatActivity() {
-    //lateinit은 전역 변수 느낌
+
     private lateinit var dateList: List<String>
     private var how_long_user_travel: Int = -1
+    private lateinit var parsedStartDay: LocalDate
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.calendar)
@@ -72,14 +76,14 @@ class calendar : AppCompatActivity() {
         //mcv를 range모드로 설정했으므로 선택 날짜 범위의 리스트를 사용할 수 있다. 여기서 리스트 이름은 dates
         var startDay: String? = null
         var endDay: String? = null
+        val today = LocalDate.now()
+
         calendarView.setOnRangeSelectedListener(object : OnRangeSelectedListener {
             override fun onRangeSelected(widget: MaterialCalendarView, dates: List<CalendarDay>) {
 //                //dates 리스트는 이런식으로 생김: [CalendarDay{2024-3-20}, CalendarDay{2024-3-21}]
 //                startDay = dates[0].date.toString()
 //                endDay = dates[dates.size - 1].date.toString()
-////                Log.e(ContentValues.TAG, "시작일 : $startDay, 종료일 : $endDay")
-////                Log.e(ContentValues.TAG, "$dates[0]")
-////                Log.d(ContentValues.TAG, "$dates")
+
 //
 //                //리스트의 각 요소는 연도-월-일 순으로 나오는데, 연도는 제외하고 싶음
 //                //따라서 연도(4)와 첫 '-'을 뺴기 위해 substring(5) 사용
@@ -89,6 +93,11 @@ class calendar : AppCompatActivity() {
 
                 if (dates.isNotEmpty()) {
                     startDay = dates[0].date.toString()
+                    Log.d("0524", "start: $startDay, today: $today")
+                    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd") //오늘 날짜 포매팅 (비교할 수 있도록)
+                    parsedStartDay = LocalDate.parse(startDay, formatter) //포매터로 파싱
+
+                    Log.d("0524","${parsedStartDay.isAfter(today)}, ${parsedStartDay.isEqual(today)}")
                     endDay = dates[dates.size - 1].date.toString()
 
                     dateList = dates.map { it.date.toString().substring(5) }.toList()
@@ -121,20 +130,42 @@ class calendar : AppCompatActivity() {
 
         //시작일, 종료일 데이터 전달
         closeBtn.setOnClickListener {
-            if (startDay != null && endDay != null){
-                //calendar_nextActivity로 이동
-                var intent = Intent(this, autoGenerate::class.java)
-                Log.d("secondList", "$dateList")
+            if (startDay != null && endDay != null) { //날짜 선택한 경우
 
-                //list라서 putStringArrayListExtra 함수를 사용하고, ArrayList함수로 변형해서 전달해야 함
-                //받을때도 getStringArrayListExtra 함수 사용
-                intent.putStringArrayListExtra("dateList",ArrayList(dateList))
-                intent.putExtra("how_long_user_travel", how_long_user_travel)
-                startActivity(intent)
-                finish() }
-            else{
-                Toast.makeText(this, "날짜를 선택해주세요.", Toast.LENGTH_LONG).show()
+                //여행지도 선택한 경우
+                if (place_singleton.selected_place != "") {
+
+                    //시작 날짜가 오늘 이전이 아님
+                    if (!(parsedStartDay.isBefore(today))) {
+                        //calendar_nextActivity로 이동
+                        var intent = Intent(this, autoGenerate::class.java)
+                        Log.d("secondList", "$dateList")
+
+                        //list라서 putStringArrayListExtra 함수를 사용하고, ArrayList함수로 변형해서 전달해야 함
+                        //받을때도 getStringArrayListExtra 함수 사용
+                        intent.putStringArrayListExtra("dateList", ArrayList(dateList))
+                        intent.putExtra("how_long_user_travel", how_long_user_travel)
+                        startActivity(intent)
+                        finish()
+                    }
+                    //시작 날짜가 오늘 이전임
+                    else {
+                        Toast.makeText(this, "여행은 오늘부터 갈 수 있어요.", Toast.LENGTH_LONG).show()
+                    }
+                }
+
+                //날짜 선택했는데 여행지 선택 x
+                else {
+                    Toast.makeText(this, "여행지를 선택해주세요.", Toast.LENGTH_LONG).show()
+                }
             }
+
+            //날짜 선택하지 않음
+            else {
+                    Toast.makeText(this, "날짜를 선택해주세요.", Toast.LENGTH_LONG).show()
+            }
+
+
         }
     }
 
