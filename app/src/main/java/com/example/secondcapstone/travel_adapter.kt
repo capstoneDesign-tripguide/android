@@ -9,8 +9,11 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class travel_adapter(val itemList: ArrayList<travel_items>, private val listener: OnItemClickListener):
+class travel_adapter
+    (val itemList: MutableList<List<informationOf_place>>,
+     private val listener: OnItemClickListener):
         RecyclerView.Adapter<travel_adapter.travel_Viewholder>() { //어댑터 상속
+
     interface OnItemClickListener {
         fun onItemClick(position: Int)
     }
@@ -36,13 +39,15 @@ class travel_adapter(val itemList: ArrayList<travel_items>, private val listener
 
     //리스트의 수를 리턴
     override fun getItemCount(): Int {
-        return itemList.count() //itemList는 class의 매개변수로 줌
+        return itemList.sumBy { it.size } // 2차원 리스트의 총 크기를 반환
     }
 
     //뷰가 바인드될 때 호출되는 메소드
     override fun onBindViewHolder(holder: travel_Viewholder, position: Int) {
-        holder.name.text = itemList[position].name
-        holder.rating.text = itemList[position].rating
-
+        val flattenedList = itemList.flatten() // 2차원 리스트를 1차원 리스트로 변환
+        Log.d("0524", "flatten is $flattenedList")
+        val item = flattenedList[position] // position에 맞는 항목을 가져옴
+        holder.name.text = item.displayName
+        holder.rating.text = item.rating.toString()
     }
 }

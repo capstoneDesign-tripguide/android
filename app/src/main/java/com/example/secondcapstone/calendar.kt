@@ -58,7 +58,7 @@ class calendar : AppCompatActivity() {
         val calendarView =
             findViewById<com.prolificinteractive.materialcalendarview.MaterialCalendarView>(R.id.calendarview)
         //val travel_spot = findViewById<TextView>(R.id.travel_spot)
-        val get_travel_spot = intent.getStringExtra("travel_spot")
+        val place = intent.getStringExtra("travel_spot")
         //travel_spot.text = get_travel_spot
 
         // 월, 요일을 한글로 보이게 설정 (MonthArrayTitleFormatter의 작동을 확인하려면 밑의 setTitleFormatter()를 지운다)

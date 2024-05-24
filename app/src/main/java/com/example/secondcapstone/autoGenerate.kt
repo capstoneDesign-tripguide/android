@@ -54,7 +54,7 @@ class autoGenerate : AppCompatActivity() {
             val planDto = planDto(
                 tags = taglist,
                 day = how_long_user_tarvel,
-                place = place.selected_place
+                place = place_singleton.selected_place
             )
 
             // OkHttpClient 설정
@@ -75,7 +75,7 @@ class autoGenerate : AppCompatActivity() {
 
             val apiService = retrofit.create(retroTaglist::class.java)
             CoroutineScope(Dispatchers.Main).launch {
-                try {
+
                     val response = sendPlanAsync(apiService, planDto)
                     if (response != null) {
                         Log.d("communication", "Success")
@@ -89,6 +89,13 @@ class autoGenerate : AppCompatActivity() {
                         makePlanList(jsonArray)
                         if (planMode.Manual == true) { // 수동 모드면 plan_list.kt로
                             var intent = Intent(this@autoGenerate, plan_list::class.java)
+                            for (i in placesList.indices) { // MutableList<List<informationOf_place>>를 인덱스 단위로 put
+                                val innerList = placesList[i]
+                                val parcelableArray = innerList.toTypedArray()
+                                intent.putExtra("placesList_$i", parcelableArray)
+                            }
+                            intent.putStringArrayListExtra("dateList",ArrayList(dateList)) //여행 날짜
+                            intent.putExtra("listSize", placesList.size)
                             startActivity(intent)
                             finish()
                         }
@@ -113,9 +120,7 @@ class autoGenerate : AppCompatActivity() {
                     } else {
                         Log.e("communication", "Failed with response code: ${response}")
                     }
-                } catch (e: Exception) {
-                    Log.e("communication", "Error: ${e.message}")
-                }
+
             }
 
 

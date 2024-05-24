@@ -19,30 +19,23 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.delay
 
 class travel_list : AppCompatActivity(), travel_adapter.OnItemClickListener {
-    private val itemList = ArrayList<travel_items>()
-    private val addedList = ArrayList<String>()
+    private val itemList = mutableListOf<List<informationOf_place>>()
+    private val addedList = mutableListOf<informationOf_place>()
     private var position = 0
+    private var finalTravelList = mutableListOf<List<informationOf_place>>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_travel_list)
 
+        val parcelableArray = intent.getParcelableArrayExtra("finalTravelList")
+        val innerList = parcelableArray?.map {it as informationOf_place} ?: listOf()
+        finalTravelList.add(innerList)
+        Log.d("0524", "in travel_list, final = $finalTravelList")
 
         val recyclerView = findViewById<RecyclerView>(R.id.rcview)
-        //나중에 json 데이터 받아서 추가하도록 수정
-        itemList.add(travel_items("롯데월드 타워", "4.8"))
-        itemList.add(travel_items("코엑스", "4.7"))
-        itemList.add(travel_items("압구정 로데오 거리", "4.5"))
-        itemList.add(travel_items("가로수길", "3.8"))
-        itemList.add(travel_items("서울숲", "4.1"))
-        itemList.add(travel_items("경복궁", "4.9"))
-        itemList.add(travel_items("창덕궁", "4.8"))
-        itemList.add(travel_items("인사동", "3.9"))
-        itemList.add(travel_items("서울역", "4.5"))
-        itemList.add(travel_items("남대문 시장", "4.2"))
-        itemList.add(travel_items("명동", "4.7"))
-        itemList.add(travel_items("여행지12", "별점12"))
 
-        val rc_adapter = travel_adapter(itemList, this) //어댑터 생성. 데이터 연결
+        val rc_adapter = travel_adapter(finalTravelList, this) //어댑터 생성. 데이터 연결
         rc_adapter.notifyDataSetChanged()
 
         recyclerView.adapter = rc_adapter //recyclerView에 어댑터 연결
@@ -53,12 +46,14 @@ class travel_list : AppCompatActivity(), travel_adapter.OnItemClickListener {
         nextBtn.setOnClickListener {
             returnDataToPreviousActivity() //add
         }
-
     }
 
     override fun onItemClick(position: Int) {
         //추가 버튼 클릭 시 선택한 여행지 이름을 addedList에 추가
-        val selectedDestination = itemList[position].name
+        val flattenedList = finalTravelList.flatten()
+        Log.d("0524", "flatten in onClick is $flattenedList")
+        val selectedDestination = flattenedList[position]
+        Log.d("0524", "selected is $selectedDestination")
 
         //이미 존재하는 여행지인 경우
         if (selectedDestination in addedList.orEmpty()) {
@@ -68,15 +63,23 @@ class travel_list : AppCompatActivity(), travel_adapter.OnItemClickListener {
             addedList?.add(selectedDestination)
         }
         Log.d("position","here is travel_list and destination is $selectedDestination")
-
     }
+
     private fun returnDataToPreviousActivity() {
-        Log.d("position","list is composed of $addedList")
-        intent.putStringArrayListExtra("addedList", addedList)
-        intent.putExtra("a","b")
-        Log.d("test0321", "position is $position in travel_list")
+//        Log.d("0524", "add in travel_list is $addedList")
+//        val stringList = addedList.map { it.toString() } as ArrayList<String>
+//        Log.d("0524", "stringList is $stringList")
+//        intent.putStringArrayListExtra("added", stringList)
+//        intent.putExtra("position", position)
+//
+        val intent = Intent().apply {
+            putParcelableArrayListExtra("addedList", ArrayList(addedList))
+        }
         intent.putExtra("position", position)
+
+
         setResult(RESULT_OK, intent) // 이전 액티비티로 결과 전달
         finish() // 현재 액티비티 종료
     }
+
 }

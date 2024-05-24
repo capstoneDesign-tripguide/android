@@ -45,13 +45,25 @@ class edit_plan_list : AppCompatActivity() {
             startActivity(intent)
         }
 
+//        //sample intent 수정해야함 꼭꼭꼭
+//        val listCount = intent.getIntExtra("list_count", 0)
+//
+//        for (i in 0 until listCount) {
+//            val placeList = intent.getParcelableArrayListExtra<informationOf_place>("place_list_$i")
+//            placeList?.forEach {
+//                Log.d("0525", "Place: ${it.displayName}, Rating: ${it.rating}, Lat: ${it.latitude}, Lon: ${it.longitude}")
+//            }
+//        }
+
         // 인텐트로부터 데이터 받기
+
         val listSize = intent.getIntExtra("listSize", 0)
         for (i in 0 until listSize) {
             val parcelableArray = intent.getParcelableArrayExtra("placesList_$i")
             val innerList = parcelableArray?.map { it as informationOf_place } ?: listOf()
             finalTravelList.add(innerList)
         }
+        Log.d("0524 edit", "finalTravelList is $finalTravelList")
 
         // 지도 보기 버튼 설정
         val goToMapButton = findViewById<Button>(R.id.go_to_map)

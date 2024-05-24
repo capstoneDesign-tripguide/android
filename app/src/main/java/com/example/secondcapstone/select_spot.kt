@@ -32,7 +32,7 @@ class select_spot : AppCompatActivity() {
             var travel_spot = input_destination.text.toString()
             intent.putExtra("travel_spot", "$travel_spot") //travel_spot 변수에 value를 put. 넣었으니 calendar에서 getExtra()로 받아야 함
             startActivity(intent)
-            place.selected_place = travel_spot
+            place_singleton.selected_place = travel_spot
             finish()
         }
 

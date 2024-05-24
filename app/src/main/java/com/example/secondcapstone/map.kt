@@ -87,15 +87,6 @@ internal class map : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //************************************************************************
-        //*****************     추후   꼭   수정  **********************************
-        //************************************************************************
-//        if (planMode.Automatic == true) {
-//            서버에서 json데이터 가져오는 로직
-//        }
-        //************************************************************************
-        //*****************     추후   꼭   수정  **********************************
-        //************************************************************************
 
         binding = ActivityMapBinding.inflate(layoutInflater)
         setContentView(binding.root)
