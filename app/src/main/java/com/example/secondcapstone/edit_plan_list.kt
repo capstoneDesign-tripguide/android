@@ -43,17 +43,9 @@ class edit_plan_list : AppCompatActivity() {
         editUserBtn.setOnClickListener {
             val intent = Intent(this, edit_user::class.java)
             startActivity(intent)
+            finish()
         }
 
-//        //sample intent 수정해야함 꼭꼭꼭
-//        val listCount = intent.getIntExtra("list_count", 0)
-//
-//        for (i in 0 until listCount) {
-//            val placeList = intent.getParcelableArrayListExtra<informationOf_place>("place_list_$i")
-//            placeList?.forEach {
-//                Log.d("0525", "Place: ${it.displayName}, Rating: ${it.rating}, Lat: ${it.latitude}, Lon: ${it.longitude}")
-//            }
-//        }
 
         // 인텐트로부터 데이터 받기
 
@@ -89,6 +81,7 @@ class edit_plan_list : AppCompatActivity() {
                 textSize = 30f
                 setTypeface(null, Typeface.BOLD)
                 setTextColor(Color.BLACK)
+                typeface = ResourcesCompat.getFont(context, R.font.jua_ttf)
             }
             linearLayout.addView(dayTextView)
 
@@ -108,6 +101,7 @@ class edit_plan_list : AppCompatActivity() {
                     textSize = 20f
                     layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
                     setTextColor(Color.BLACK)
+                    typeface = ResourcesCompat.getFont(context, R.font.jua_ttf)
                 }
 
                 placeLayout.addView(placeTextView)

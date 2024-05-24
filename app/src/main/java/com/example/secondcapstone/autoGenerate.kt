@@ -6,14 +6,17 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
 import android.view.MotionEvent
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -38,12 +41,30 @@ class autoGenerate : AppCompatActivity() {
     private var jsonArray: JSONArray = JSONArray()
     private var placesList = mutableListOf<List<informationOf_place>>()
     private var finalTravelList = ArrayList<ArrayList<String>?>()
+    private val tips = listOf(
+        "Tip: 일정을 너무 빡빡하게 짜지 말고, 여유를 두세요. 예상치 못한 상황이 발생할 수 있으니 유연하게 대처하는 것이 좋습니다.",
+        "Tip: 주요 관광지 외에도 현지인들이 추천하는 숨은 명소를 방문해 보세요.",
+        "Tip: 현지 문화를 존중하고, 예의를 지키세요. 이는 좋은 여행 경험을 만드는 데 중요한 요소입니다.",
+        "Tip: 귀중품은 호텔 금고에 보관하고, 필요한 만큼만 소지하세요.",
+        "Tip: 교통수단을 이용할 때는 안전한 방법을 선택하고, 목적지를 정확히 파악하세요",
+        "Tip: 현지 음식을 맛보는 것은 중요한 여행 경험입니다. 다양한 음식을 시도해 보세요.",
+        "Tip: 현지의 문화 행사나 축제에 참여해 보세요. 현지 문화를 깊이 이해할 수 있는 기회가 됩니다.",
+        "Tip: 여행 중 발생한 문제점이나 개선할 점을 기록해 두면 다음 여행을 더 잘 준비할 수 있습니다.",
+        "Tip: 여행 중 만난 사람들에게 감사의 인사를 전하는 것도 좋은 마무리입니다.",
+        "Tip: 여행지에서 사온 작은 선물을 친구나 가족에게 주면 좋은 추억이 될 것입니다."
+    )
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.auto_generate)
         val dateList = intent.getStringArrayListExtra("dateList") //Calendar에서 받은 날짜
         how_long_user_tarvel = intent.getIntExtra("how_long_user_travel", -1)
 
+        val randomTip = tips.random()
+        val gifImageView = findViewById<ImageView>(R.id.gifImageView)
+        val textview_tip = findViewById<TextView>(R.id.textview_tip)
+        textview_tip.text = randomTip
 
         //이 리스트의 내용을 서버로 넘겨주면 된다.
         var taglist = mutableListOf<String>()  //var 리스트니까 mutableListOf로 선언
@@ -51,6 +72,15 @@ class autoGenerate : AppCompatActivity() {
 
         val addBtn = findViewById<Button>(R.id.nextBtn)
         addBtn.setOnClickListener {
+            gifImageView.visibility = View.VISIBLE
+            textview_tip.visibility = View.VISIBLE
+            addBtn.visibility = View.GONE
+
+            Glide.with(this)
+                .asGif()
+                .load(R.drawable.progressing) // `processing.gif` 파일의 리소스 ID
+                .into(gifImageView)
+
             val planDto = planDto(
                 tags = taglist,
                 day = how_long_user_tarvel,
@@ -115,7 +145,7 @@ class autoGenerate : AppCompatActivity() {
 
                             intent.putExtra("listKey", finalTravelList as Serializable)
                             startActivity(intent)
-                            //finish()
+                            finish()
                         }
                     } else {
                         Log.e("communication", "Failed with response code: ${response}")
@@ -208,6 +238,8 @@ class autoGenerate : AppCompatActivity() {
                 drawerLayout.openDrawer(GravityCompat.END)
             }
         }
+
+
     }
 
     private fun makePlanList(jsonArray: JSONArray){

@@ -84,12 +84,11 @@ dependencies {
     implementation("com.kakao.sdk:v2-friend:2.19.0") // 카카오톡 소셜 피커, 리소스 번들 파일 포함
     implementation("com.kakao.sdk:v2-navi:2.19.0") // 카카오내비
     implementation("com.kakao.sdk:v2-cert:2.19.0") // 카카오 인증서비스
-
     implementation("androidx.drawerlayout:drawerlayout:1.1.1") //드로어 레이아웃
-
     implementation("com.google.android.gms:play-services-maps:17.0.0") //구글맵
     implementation("com.google.android.gms:play-services-location:17.0.0") //구글맵2
-
     implementation("com.android.volley:volley:1.2.0") //구글 맵 API에 경로 그리기
     implementation("com.google.maps.android:android-maps-utils:2.2.5")
+    implementation("com.github.bumptech.glide:glide:4.12.0") //GIF
+    annotationProcessor("com.github.bumptech.glide:compiler:4.12.0") //GIF
 }

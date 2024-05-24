@@ -49,6 +49,7 @@ class calendar : AppCompatActivity() {
         closeBtn.setOnClickListener {
             var intent = Intent(this, travel_list::class.java)
             startActivity(intent)
+            finish()
         }
 
 
